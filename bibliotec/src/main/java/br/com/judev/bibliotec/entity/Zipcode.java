@@ -22,7 +22,7 @@ public class Zipcode {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @OneToOne(cascade = CascadeType.ALL , fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "city_id")
     private City city;
 

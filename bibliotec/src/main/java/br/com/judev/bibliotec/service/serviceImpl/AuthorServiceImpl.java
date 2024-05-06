@@ -24,7 +24,6 @@ public class AuthorServiceImpl implements AuthorService{
         if(author.getZipcode() == null){
             throw new IllegalArgumentException("author need a zipcode");
         }
-    
         return author;
     
     }

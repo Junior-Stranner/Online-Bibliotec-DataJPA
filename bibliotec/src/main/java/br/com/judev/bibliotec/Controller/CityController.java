@@ -2,7 +2,6 @@ package br.com.judev.bibliotec.Controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,29 +29,37 @@ import lombok.AllArgsConstructor;
 public class CityController {
     
      private final CityService cityService;
+     
 
-    @Operation(summary = "Criar uma nova City", description = "Endpoint para criar uma nova City",
-            responses = {
-                    @ApiResponse(responseCode = "201", description = "City criado com sucesso",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = City.class))),
-                    @ApiResponse(responseCode = "409", description = "City com informações duplicadas",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = City.class))),
-                    @ApiResponse(responseCode = "422", description = "Dados de entrada inválidos",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = City.class)))
-            })
-    @PostMapping(value = "/add",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE) // Define que o endpoint consome e produz JSON
-    public ResponseEntity<City> addCity(@RequestBody City city) {
+     @Operation(summary = "Adds a new City",
+     description = "Adds a new City by passing in a JSON, XML or YML representation of the City!",
+     tags = {"City"},
+     responses = {
+         @ApiResponse(description = "Created", responseCode = "201",
+             content = @Content(schema = @Schema(implementation = City.class))),
+         @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+         @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+     }
+ )
+    @PostMapping(value = "/add" , produces = MediaType.APPLICATION_JSON_VALUE) // Define que o endpoint consome e produz JSON
+    public ResponseEntity<City> createCity(@RequestBody City city) {
         City newCity = cityService.addCity(city);
-        return new ResponseEntity<>(newCity, HttpStatus.OK);
+        return new ResponseEntity<>(newCity, HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Buscar um endereço pelo ID", description = "Endpoint para buscar um endereço pelo ID",
+    @Operation(summary = "Finds a City", description = "Finds a City",
+    tags = {"City"},
     responses = {
-            @ApiResponse(responseCode = "200", description = "Endereço encontrado com sucesso",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = City.class))),
-            @ApiResponse(responseCode = "404", description = "Endereço não encontrado",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = City.class))),
-    })
+          @ApiResponse(description = "Success", responseCode = "200",
+             content = @Content(schema = @Schema(implementation = City.class))),
+          @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+          @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+          @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+          @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+          @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+      }
+  )
     @GetMapping(value = "/get/{id}" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE) // Define que o endpoint consome e produz JSON)
     public ResponseEntity<City> getCityById(@PathVariable  Long id) {
         City city = cityService.getCity(id);
@@ -60,28 +67,60 @@ public class CityController {
     }
 
 
-      @Operation(summary = "Listar todos os endereços cadastrados", description = "Lista todos os endereços cadastrados",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Lista de todos os endereços cadastrados",
-                            content = @Content(mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = City.class))))
-            })
+    @Operation(summary = "Finds all City", description = "Finds all City",
+    tags = {"City"},
+    responses = {
+        @ApiResponse(description = "Success", responseCode = "200",
+               content = { @Content(mediaType = "application/json", 
+               array = @ArraySchema(schema = @Schema(implementation = City.class)))}),
+            @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+            @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+            @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+            @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+         }
+)
     @GetMapping(value = "/getall", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<City>> getCities() {
         List<City> cities = cityService.getCities();
         return new ResponseEntity<List<City>>(cities, HttpStatus.OK);
     }
 
+
+    @Operation(summary = "Updates a City",
+		description = "Updates a City by passing in a JSON, XML or YML representation of the City!",
+		tags = {"City"},
+		responses = { 
+            @ApiResponse(description = "Updated", responseCode = "200",
+				content = @Content(schema = @Schema(implementation = City.class))),
+			@ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+			@ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+			@ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+			@ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+		}
+	)
+    
+    @PutMapping("/edit/id")
+    public ResponseEntity<City> editCity(@RequestBody  City city, @PathVariable  Long id) {
+        City editCity = cityService.editCity(id, city);
+        return new ResponseEntity<>(editCity, HttpStatus.OK);
+    }
+
+
+    @Operation(summary = "Deletes a City",
+		description = "Deletes a City by passing in a JSON, XML or YML representation of the City!",
+		tags = {"City"},
+		responses = {
+			@ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+			@ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+			@ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+			@ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+			@ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+		}
+	)
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<City> deleteCity(@PathVariable  Long id) {
         City city = cityService.deleteCity(id);
         return new ResponseEntity<>(city, HttpStatus.OK);
     }
 
-    @PutMapping("/edit/id")
-    public ResponseEntity<City> editCity(@RequestBody  City city,
-                                         @PathVariable  Long id) {
-        City editCity = cityService.editCity(id, city);
-        return new ResponseEntity<>(editCity, HttpStatus.OK);
-    }
 }

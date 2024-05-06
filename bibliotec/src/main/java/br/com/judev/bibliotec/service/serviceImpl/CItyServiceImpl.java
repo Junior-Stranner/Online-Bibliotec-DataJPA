@@ -1,7 +1,9 @@
 package br.com.judev.bibliotec.service.serviceImpl;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import br.com.judev.bibliotec.entity.City;
@@ -17,21 +19,22 @@ public class CItyServiceImpl implements CityService{
         private final CityRepository cityRepository;
 
     
-    @Override
-    public City addCity(City city) {
+        @Override
+        public City addCity(City city) {
+        
+            // Verificar se a entrada e o nome da cidade são válidos
+            if (city == null || city.getName() == null || city.getName().isBlank()) {
+                System.out.println("City name is null or blank.");
+                throw new IllegalArgumentException("City name cannot be null or blank.");
+            }
+        
+            Optional<City> existingCity = cityRepository.findByName(city.getName());
+             if (existingCity.isPresent()) {
+                throw new DuplicateKeyException("City already exists!");
+            }
 
-      List<City> citys = cityRepository.findAll();
-      boolean cityExists = citys.stream().anyMatch(c -> c.getName().equals(city.getName()));
-
-      if(city.getName() == null || city.getName().isBlank()){
-        throw new UnsupportedOperationException("City name cannot be null !!");
-      } 
-      if(cityExists){
-        throw new UnsupportedOperationException("City already exists !");
-      }
-     
-      return  cityRepository.save(city);
-    }
+            return cityRepository.save(city);
+        }
 
     @Override
     public List<City> getCities() {

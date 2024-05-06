@@ -20,7 +20,6 @@ public class AuthorServiceImpl implements AuthorService{
 
     @Override
     public Author addAuthor(Author author) {
-        Zipcode zipcode = zipcodeService.getZipcode(author.getZipcode());
         if(author.getZipcode() == null){
             throw new IllegalArgumentException("author need a zipcode");
         }

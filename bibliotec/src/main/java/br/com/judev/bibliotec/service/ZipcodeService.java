@@ -4,12 +4,13 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import br.com.judev.bibliotec.dtos.requestDto.ZipcodeRequestDto;
 import br.com.judev.bibliotec.entity.Zipcode;
 
 @Service
 public interface ZipcodeService {
 
-    public Zipcode addZipcode(Zipcode zipcode);
+    public Zipcode addZipcode(ZipcodeRequestDto zipcodeRequestDto);
     public List<Zipcode> getZipcodes();
     public Zipcode getZipcode(Long zipcodeId);
     public Zipcode deleteZipcode(Long zipcodeId);

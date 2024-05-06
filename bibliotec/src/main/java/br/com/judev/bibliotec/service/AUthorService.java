@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 import br.com.judev.bibliotec.entity.Author;
 
 @Service
-public interface AUthorService {
-    
+public interface AuthorService {
+
     public Author addAuthor(Author author);
     public List<Author> getAuthors();
     public Author getAuthorById(Long authorId);

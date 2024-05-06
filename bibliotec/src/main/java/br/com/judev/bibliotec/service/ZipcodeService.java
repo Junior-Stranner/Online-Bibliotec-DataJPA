@@ -1,8 +1,19 @@
 package br.com.judev.bibliotec.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
+import br.com.judev.bibliotec.entity.Zipcode;
+
 @Service
-public class ZipcodeService {
-    
+public interface ZipcodeService {
+
+    public Zipcode addZipcode(Zipcode zipcode);
+    public List<Zipcode> getZipcodes();
+    public Zipcode getZipcode(Long zipcodeId);
+    public Zipcode deleteZipcode(Long zipcodeId);
+    public Zipcode editZipcode(Long zipcodeId, Zipcode zipcode);
+    public Zipcode addCityToZipcode(Long zipcodeId, Long cityId);
+    public Zipcode removeCityFromZipcode(Long zipcodeId);
 }

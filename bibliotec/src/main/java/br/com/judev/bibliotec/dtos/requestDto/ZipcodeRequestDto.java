@@ -1,9 +1,12 @@
 package br.com.judev.bibliotec.dtos.requestDto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
 public class ZipcodeRequestDto {
-    private String name;
-    private Long cityId;
+  @NotBlank
+  private String name;
+  private Long cityId;
 }
+

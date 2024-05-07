@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import br.com.judev.bibliotec.dtos.requestDto.ZipcodeRequestDto;
 import br.com.judev.bibliotec.entity.City;
 import br.com.judev.bibliotec.entity.Zipcode;
+import br.com.judev.bibliotec.repository.CityRepository;
 import br.com.judev.bibliotec.repository.ZipcodeRepository;
 import br.com.judev.bibliotec.service.CityService;
 import br.com.judev.bibliotec.service.ZipcodeService;
@@ -23,6 +24,7 @@ public class ZipcodeServiceImpl implements ZipcodeService{
 
     private final ZipcodeRepository zipcodeRepository;
     private final CityService cityService;
+    private final CityRepository cityRepository;
 
    @Transactional  
    public Zipcode addZipcode(ZipcodeRequestDto zipcodeRequestDto) {
@@ -37,9 +39,20 @@ public class ZipcodeServiceImpl implements ZipcodeService{
         throw new DuplicateKeyException("Zipcode already exists!");
       }
 
-    // Criar o novo Zipcode
-     Zipcode newZipcode = new Zipcode();
-    newZipcode.setName(zipcodeRequestDto.getName());
+      Zipcode newZipcode = new Zipcode();
+      newZipcode.setName(zipcodeRequestDto.getName());
+
+       // Associação da cidade, se fornecida
+     if (zipcodeRequestDto.getCityId() != null) {
+        Optional<City> city = cityRepository.findById(zipcodeRequestDto.getCityId());
+        if (city.isPresent()) {
+            newZipcode.setCity(city.get());
+        } else {
+            throw new IllegalArgumentException("City not found with ID: " + zipcodeRequestDto.getCityId());
+        }
+    } else {
+        throw new IllegalArgumentException("City ID must be provided.");
+    }
 
     // Salvar no repositório
     return zipcodeRepository.save(newZipcode);

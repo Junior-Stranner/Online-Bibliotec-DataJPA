@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import br.com.judev.bibliotec.entity.Author;
-import br.com.judev.bibliotec.entity.Zipcode;
 import br.com.judev.bibliotec.repository.AuthorRepository;
 import br.com.judev.bibliotec.service.AuthorService;
 import br.com.judev.bibliotec.service.ZipcodeService;

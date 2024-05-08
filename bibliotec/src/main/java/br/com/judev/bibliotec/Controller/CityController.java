@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 import br.com.judev.bibliotec.entity.City;
+import br.com.judev.bibliotec.entity.Zipcode;
 import br.com.judev.bibliotec.service.CityService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -105,11 +106,12 @@ public class CityController {
     }
 
 
-    @Operation(summary = "Deletes a City",
-		description = "Deletes a City by passing in a JSON, XML or YML representation of the City!",
-		tags = {"City"},
-		responses = {
-			@ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+    @Operation(summary = "delete a city",
+		description = "delete a city by passing in a JSON, XML or YML representation of the city!",
+		tags = {"city"},
+		responses = { 
+            @ApiResponse(description = "delete", responseCode = "200",
+				content = @Content(schema = @Schema(implementation = City.class))),
 			@ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
 			@ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
 			@ApiResponse(description = "Not Found", responseCode = "404", content = @Content),

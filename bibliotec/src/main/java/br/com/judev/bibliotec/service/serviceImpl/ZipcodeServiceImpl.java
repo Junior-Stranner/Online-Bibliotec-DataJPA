@@ -3,8 +3,6 @@ package br.com.judev.bibliotec.service.serviceImpl;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -60,12 +58,11 @@ public class ZipcodeServiceImpl implements ZipcodeService{
     return zipcodeRepository.save(newZipcode);
 }
 
-      @Override
+    @Override
     public List<Zipcode> getZipcodes() {
-        return StreamSupport
-                .stream(zipcodeRepository.findAll().spliterator(), false)
-                .collect(Collectors.toList());
-        }
+        return zipcodeRepository.findAll();
+        
+    }
 
     @Override
     public Zipcode getZipcode(Long zipcodeId) {

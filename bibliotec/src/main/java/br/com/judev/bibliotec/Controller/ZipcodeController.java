@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.judev.bibliotec.dtos.requestDto.ZipcodeRequestDto;
-import br.com.judev.bibliotec.entity.City;
 import br.com.judev.bibliotec.entity.Zipcode;
 import br.com.judev.bibliotec.service.ZipcodeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,7 +32,7 @@ public class ZipcodeController {
 
 
         
-     @Operation(summary = "Adds a new City",
+     @Operation(summary = "Adds a new Zipcode",
      description = "Adds a new Zipcode by passing in a JSON, XML or YML representation of the Zipcode!",
      tags = {"Zipcode"},
      responses = {
@@ -87,11 +86,11 @@ public class ZipcodeController {
         return new ResponseEntity<>(zipcodes, HttpStatus.OK);
     }
 
-      @Operation(summary = "Updates a City",
-		description = "Updates a Zipcode by passing in a JSON, XML or YML representation of the Zipcode!",
+      @Operation(summary = "delete a Zipcode",
+		description = "delete a Zipcode by passing in a JSON, XML or YML representation of the Zipcode!",
 		tags = {"Zipcode"},
 		responses = { 
-            @ApiResponse(description = "Updated", responseCode = "200",
+            @ApiResponse(description = "delete", responseCode = "200",
 				content = @Content(schema = @Schema(implementation = Zipcode.class))),
 			@ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
 			@ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -125,6 +124,20 @@ public class ZipcodeController {
     }
 
 
+
+
+
+    @Operation(summary = "Adds a new City on exists Zipcode",
+    description = "Adds a new City by passing in a JSON, XML or YML representation of the Zipcode!",
+    tags = {"Zipcode"},
+    responses = {
+        @ApiResponse(description = "Created", responseCode = "201",
+            content = @Content(schema = @Schema(implementation = Zipcode.class))),
+        @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+        @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+        @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+    }
+)
     @PostMapping("/addCity/{cityId}/toZipcode/{zipcodeId}")
     public ResponseEntity<Zipcode> addCity(@PathVariable final Long cityId,
                                            @PathVariable final Long zipcodeId) {
@@ -132,6 +145,19 @@ public class ZipcodeController {
         return new ResponseEntity<>(zipcode, HttpStatus.OK);
     }
 
+
+    @Operation(summary = "delete city on  Zipcode",
+    description = "delete a city on a Zipcode by passing in a JSON, XML or YML representation of the Zipcode!",
+    tags = {"Zipcode"},
+    responses = { 
+        @ApiResponse(description = "delete", responseCode = "200",
+            content = @Content(schema = @Schema(implementation = Zipcode.class))),
+        @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+        @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+        @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+        @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+    }
+)
     @DeleteMapping("/deleteCity/{zipcodeId}")
     public ResponseEntity<Zipcode> deleteCity(@PathVariable final Long zipcodeId) {
         Zipcode zipcode = zipcodeService.removeCityFromZipcode(zipcodeId);

@@ -3,6 +3,8 @@ package br.com.judev.bibliotec.service.serviceImpl;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -58,11 +60,12 @@ public class ZipcodeServiceImpl implements ZipcodeService{
     return zipcodeRepository.save(newZipcode);
 }
 
-    @Override
+      @Override
     public List<Zipcode> getZipcodes() {
-        return zipcodeRepository.findAll();
-        
-    }
+        return StreamSupport
+                .stream(zipcodeRepository.findAll().spliterator(), false)
+                .collect(Collectors.toList());
+        }
 
     @Override
     public Zipcode getZipcode(Long zipcodeId) {
@@ -78,15 +81,15 @@ public class ZipcodeServiceImpl implements ZipcodeService{
     }
 
     @Override
-    public Zipcode editZipcode(Long zipcodeId, Zipcode zipcode) {
-        Zipcode zipToEdit = zipcodeRepository.findById(zipcodeId)
-            .orElseThrow(() -> new EntityNotFoundException("zipcode with ID: " + zipcodeId + " could not be found"));
+    public Zipcode editZipcode(Long id, ZipcodeRequestDto zipcodeRequestDto) {
+        Zipcode zipToEdit = zipcodeRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("zipcode with ID: " + id + " could not be found"));
 
-        if (zipcode.getName() == null || zipcode.getName().isBlank()) {
+        if (zipcodeRequestDto.getName() == null || zipcodeRequestDto.getName().isBlank()) {
             throw new IllegalArgumentException("zipcode name cannot be null or blank!");
         }
 
-        zipToEdit.setName(zipcode.getName());  
+        zipToEdit.setName(zipcodeRequestDto.getName());  
         return zipcodeRepository.save(zipToEdit); 
     }
 
@@ -111,7 +114,6 @@ public class ZipcodeServiceImpl implements ZipcodeService{
         return zipcodeRepository.save(zipcode);
     }
     
-
     @Override
     public Zipcode removeCityFromZipcode(Long zipcodeId) {
         Zipcode zipcode = getZipcode(zipcodeId);
@@ -127,6 +129,5 @@ public class ZipcodeServiceImpl implements ZipcodeService{
     
         return zipcodeRepository.save(zipcode);
     }
-    
 
 }

@@ -86,7 +86,6 @@ public class CityController {
         return new ResponseEntity<List<City>>(cities, HttpStatus.OK);
     }
 
-
     @Operation(summary = "Updates a City",
 		description = "Updates a City by passing in a JSON, XML or YML representation of the City!",
 		tags = {"City"},
@@ -99,9 +98,8 @@ public class CityController {
 			@ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
 		}
 	)
-    
-    @PutMapping("/edit/id")
-    public ResponseEntity<City> editCity(@RequestBody  City city, @PathVariable  Long id) {
+    @PutMapping(value = "/edit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<City> editCity(@RequestBody City city, @PathVariable Long id) {
         City editCity = cityService.editCity(id, city);
         return new ResponseEntity<>(editCity, HttpStatus.OK);
     }
@@ -118,7 +116,7 @@ public class CityController {
 			@ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
 		}
 	)
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping(value = "/delete/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<City> deleteCity(@PathVariable  Long id) {
         City city = cityService.deleteCity(id);
         return new ResponseEntity<>(city, HttpStatus.OK);

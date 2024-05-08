@@ -14,7 +14,7 @@ public interface ZipcodeService {
     public List<Zipcode> getZipcodes();
     public Zipcode getZipcode(Long zipcodeId);
     public Zipcode deleteZipcode(Long zipcodeId);
-    public Zipcode editZipcode(Long zipcodeId, Zipcode zipcode);
+    public Zipcode editZipcode(Long id, ZipcodeRequestDto zipcodeRequestDto);
     public Zipcode addCityToZipcode(Long zipcodeId, Long cityId);
     public Zipcode removeCityFromZipcode(Long zipcodeId);
 }

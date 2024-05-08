@@ -7,6 +7,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import br.com.judev.bibliotec.entity.City;
+import br.com.judev.bibliotec.entity.Zipcode;
 import br.com.judev.bibliotec.repository.CityRepository;
 import br.com.judev.bibliotec.service.CityService;
 import jakarta.persistence.EntityNotFoundException;
@@ -63,6 +64,12 @@ public class CItyServiceImpl implements CityService{
         if (city.getName() == null || city.getName().isBlank()) {
             throw new IllegalArgumentException("City name cannot be null or blank!");
         }
+
+        
+       Optional<City> existingCity = cityRepository.findByName(city.getName());
+       if (existingCity.isPresent() && !existingCity.get().getId().equals(cityId)) {
+         throw new DuplicateKeyException("Another Zipcode with the same zipcode already exists!");
+      }
 
         cityToEdit.setName(city.getName());  
         return cityRepository.save(cityToEdit); 

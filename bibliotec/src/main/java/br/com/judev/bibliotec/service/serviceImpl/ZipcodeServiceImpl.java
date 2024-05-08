@@ -86,6 +86,11 @@ public class ZipcodeServiceImpl implements ZipcodeService{
             throw new IllegalArgumentException("zipcode name cannot be null or blank!");
         }
 
+       Optional<Zipcode> existingZipcode = zipcodeRepository.findByName(zipcodeRequestDto.getName());
+       if (existingZipcode.isPresent() && !existingZipcode.get().getId().equals(id)) {
+         throw new DuplicateKeyException("Another Zipcode with the same zipcode already exists!");
+      }
+
         zipToEdit.setName(zipcodeRequestDto.getName());  
         return zipcodeRepository.save(zipToEdit); 
     }

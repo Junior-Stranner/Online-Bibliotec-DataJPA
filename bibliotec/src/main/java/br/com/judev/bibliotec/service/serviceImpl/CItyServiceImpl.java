@@ -7,7 +7,6 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import br.com.judev.bibliotec.entity.City;
-import br.com.judev.bibliotec.entity.Zipcode;
 import br.com.judev.bibliotec.repository.CityRepository;
 import br.com.judev.bibliotec.service.CityService;
 import jakarta.persistence.EntityNotFoundException;

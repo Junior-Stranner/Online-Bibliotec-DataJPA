@@ -3,6 +3,7 @@ package br.com.judev.bibliotec.Controller;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,7 +44,7 @@ public class ZipcodeController {
          @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
      }
  )
-    @PostMapping("/add")
+    @PostMapping(value = "/add" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Zipcode> addZipcode(@RequestBody final ZipcodeRequestDto zipcodeRequestDto) {
         Zipcode zipcode = zipcodeService.addZipcode(zipcodeRequestDto);
         return new ResponseEntity<>(zipcode, HttpStatus.OK);
@@ -62,7 +63,7 @@ public class ZipcodeController {
           @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
       }
   )
-    @GetMapping("/get/{id}")
+    @GetMapping(value = "/get/{id}" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Zipcode> getZipcode(@PathVariable final Long id) {
         Zipcode zipcode = zipcodeService.getZipcode(id);
         return new ResponseEntity<>(zipcode, HttpStatus.OK);
@@ -80,7 +81,7 @@ public class ZipcodeController {
             @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
          }
 )
-    @GetMapping("/getAll")
+    @GetMapping(value = "/getAll" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Zipcode>> getZipcodes() {
         List<Zipcode> zipcodes = zipcodeService.getZipcodes();
         return new ResponseEntity<>(zipcodes, HttpStatus.OK);
@@ -98,7 +99,7 @@ public class ZipcodeController {
 			@ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
 		}
 	)
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping(value = "/delete/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Zipcode> deleteZipcode(@PathVariable final Long id) {
         Zipcode zipcode = zipcodeService.deleteZipcode(id);
         return new ResponseEntity<>(zipcode, HttpStatus.OK);
@@ -116,7 +117,7 @@ public class ZipcodeController {
         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
     }
 )
-    @PutMapping("/edit/{id}")
+    @PutMapping(value = "/edit/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Zipcode> editZipcode(@RequestBody final ZipcodeRequestDto zipcodeRequestDto,
                                                @PathVariable final Long id) {
         Zipcode zipcode = zipcodeService.editZipcode(id, zipcodeRequestDto);
@@ -138,7 +139,7 @@ public class ZipcodeController {
         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
     }
 )
-    @PostMapping("/addCity/{cityId}/toZipcode/{zipcodeId}")
+    @PostMapping(value = "/addCity/{cityId}/toZipcode/{zipcodeId}" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Zipcode> addCity(@PathVariable final Long cityId,
                                            @PathVariable final Long zipcodeId) {
         Zipcode zipcode = zipcodeService.addCityToZipcode(zipcodeId, cityId);
@@ -158,7 +159,7 @@ public class ZipcodeController {
         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
     }
 )
-    @DeleteMapping("/deleteCity/{zipcodeId}")
+    @DeleteMapping(value = "/deleteCity/{zipcodeId}" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Zipcode> deleteCity(@PathVariable final Long zipcodeId) {
         Zipcode zipcode = zipcodeService.removeCityFromZipcode(zipcodeId);
         return new ResponseEntity<>(zipcode, HttpStatus.OK);

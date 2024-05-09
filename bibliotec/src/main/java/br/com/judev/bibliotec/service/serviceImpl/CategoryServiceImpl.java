@@ -39,8 +39,8 @@ public class CategoryServiceImpl implements CategoryService {
                 throw new IllegalArgumentException("City name cannot be null or blank.");
             }
         
-            Optional<City> existingCity = categoryRepository.findByName(categoryRequestDto.getName());
-             if (existingCity.isPresent()) {
+            Optional<Category> existingCategory = categoryRepository.findByName(categoryRequestDto.getName());
+             if (existingCategory.isPresent()) {
                 throw new DuplicateKeyException("City already exists!");
             }
 
@@ -81,6 +81,12 @@ public class CategoryServiceImpl implements CategoryService {
         // Verificar se o CategoryRequestDto é válido
         if (categoryRequestDto == null || categoryRequestDto.getName() == null || categoryRequestDto.getName().isBlank()) {
             throw new IllegalArgumentException("Category name cannot be null or blank!");
+        }
+
+        Optional<Category> existingCategory = categoryRepository.findByName(categoryRequestDto.getName());
+        if(existingCategory.isPresent() && !existingCategory.get().getId().equals(categoryId)){
+            throw new DuplicateKeyException("Another Category with the same Category already exists!");
+
         }
 
         // Atualizar a Category com os dados do CategoryRequestDto

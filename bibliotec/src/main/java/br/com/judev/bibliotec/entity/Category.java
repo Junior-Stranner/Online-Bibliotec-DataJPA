@@ -23,7 +23,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     private List<Book> books = new ArrayList<>();
 
     public Category(String name, List<Book> books) {

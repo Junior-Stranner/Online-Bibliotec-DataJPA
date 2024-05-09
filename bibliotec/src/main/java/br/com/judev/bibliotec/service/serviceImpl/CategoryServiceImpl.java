@@ -12,7 +12,6 @@ import br.com.judev.bibliotec.dtos.mapper.CategoryMapper;
 import br.com.judev.bibliotec.dtos.requestDto.CategoryRequestDto;
 import br.com.judev.bibliotec.dtos.responseDto.CategoryResponseDto;
 import br.com.judev.bibliotec.entity.Category;
-import br.com.judev.bibliotec.entity.City;
 import br.com.judev.bibliotec.repository.CategoryRepository;
 import br.com.judev.bibliotec.service.CategoryService;
 import jakarta.persistence.EntityNotFoundException;

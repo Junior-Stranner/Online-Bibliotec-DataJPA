@@ -73,6 +73,7 @@ public class ZipcodeServiceImpl implements ZipcodeService{
     @Override
     public Zipcode deleteZipcode(Long zipcodeId) {
         Zipcode zipcode = getZipcode(zipcodeId);
+        
         zipcodeRepository.delete(zipcode);
         return zipcode;
     }

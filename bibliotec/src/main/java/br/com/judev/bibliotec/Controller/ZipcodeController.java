@@ -125,9 +125,6 @@ public class ZipcodeController {
     }
 
 
-
-
-
     @Operation(summary = "Adds a new City on exists Zipcode",
     description = "Adds a new City by passing in a JSON, XML or YML representation of the Zipcode!",
     tags = {"Zipcode"},
@@ -162,7 +159,7 @@ public class ZipcodeController {
     @DeleteMapping(value = "/deleteCity/{zipcodeId}" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Zipcode> deleteCity(@PathVariable final Long zipcodeId) {
         Zipcode zipcode = zipcodeService.removeCityFromZipcode(zipcodeId);
-        return new ResponseEntity<>(zipcode, HttpStatus.OK);
+        return ResponseEntity.ok().body(zipcode);
     }
 
 }

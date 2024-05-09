@@ -51,7 +51,7 @@ public class CategoryController {
         return new ResponseEntity<>(categoryResponseDto, HttpStatus.OK);
     }
 
-    @Operation(summary = "Finds a Category", description = "Finds a City",
+    @Operation(summary = "Finds a Category", description = "Finds a Category",
     tags = {"Category"},
     responses = {
           @ApiResponse(description = "Success", responseCode = "200",

@@ -4,17 +4,19 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import br.com.judev.bibliotec.dtos.requestDto.AuthorRequestDto;
+import br.com.judev.bibliotec.dtos.responseDto.AuthorResponseDto;
 import br.com.judev.bibliotec.entity.Author;
 
 @Service
 public interface AuthorService {
 
-    public Author addAuthor(Author author);
-    public List<Author> getAuthors();
-    public Author getAuthorById(Long authorId);
+    public AuthorResponseDto addAuthor(AuthorRequestDto authorRequestDto);
+    public List<AuthorResponseDto> getAuthors();
+    public AuthorResponseDto getAuthorById(Long authorId);
     public Author getAuthor(Long authorId);
-    public Author deleteAuthor(Long authorId);
-    public Author editAuthor(Long authorId, Author author);
-    public Author addZipcodeToAuthor(Long authorId, Long zipcodeId);
-    public Author deleteZipcodeFromAuthor(Long authorId);
+    public AuthorResponseDto deleteAuthor(Long authorId);
+    public AuthorResponseDto editAuthor(Long authorId, AuthorRequestDto authorRequestDto);
+    public AuthorResponseDto addZipcodeToAuthor(Long authorId, Long zipcodeId);
+    public AuthorResponseDto deleteZipcodeFromAuthor(Long authorId);
 }

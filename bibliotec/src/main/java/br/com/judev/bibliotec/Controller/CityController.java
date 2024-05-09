@@ -25,7 +25,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 
 @RestController
-@RequestMapping("v1/api/city")
+@RequestMapping("/v1/api/city")
 @AllArgsConstructor
 public class CityController {
     

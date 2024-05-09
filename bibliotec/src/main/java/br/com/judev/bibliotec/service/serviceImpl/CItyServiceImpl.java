@@ -21,7 +21,6 @@ public class CItyServiceImpl implements CityService{
     
         @Override
         public City addCity(City city) {
-        
             // Verificar se a entrada e o nome da cidade são válidos
             if (city == null || city.getName() == null || city.getName().isBlank()) {
                 System.out.println("City name is null or blank.");

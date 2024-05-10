@@ -78,7 +78,7 @@ public class AuthorServiceImpl implements AuthorService{
        return authorRepository.findById(authorId).orElseThrow(() ->
                 new IllegalArgumentException("could not find Author with id: " + authorId));
     }
-    
+
     @Override
     public AuthorResponseDto deleteAuthor(Long authorId) {
         Author author = authorRepository.findById(authorId).orElseThrow(() ->
@@ -97,6 +97,7 @@ public class AuthorServiceImpl implements AuthorService{
     public AuthorResponseDto editAuthor(Long authorId, AuthorRequestDto authorRequestDto) {
         Author edidAuthor = authorRepository.findById(authorId)
         .orElseThrow(() -> new EntityNotFoundException("Author with ID: " + authorId + " could not be found"));
+        
         if(authorRequestDto == null || authorRequestDto.getName() == null || authorRequestDto.getName().isBlank()){
             System.out.println("Author name is null or blank.");
             throw new IllegalArgumentException("Author name cannot be null or blank.");

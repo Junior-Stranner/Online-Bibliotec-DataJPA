@@ -2,7 +2,6 @@ package br.com.judev.bibliotec.Controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -161,7 +160,7 @@ public class AuthorController {
         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
     }
 )
-    @PostMapping("/removeZipcode/{authorId}")
+    @DeleteMapping("/removeZipcode/{authorId}")
     private ResponseEntity<AuthorResponseDto> removeZipcode(@PathVariable final Long authorId) {
         AuthorResponseDto authorResponseDto = authorService.deleteZipcodeFromAuthor(authorId);
         return new ResponseEntity<>(authorResponseDto, HttpStatus.OK);

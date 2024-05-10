@@ -8,6 +8,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import br.com.judev.bibliotec.dtos.requestDto.ZipcodeRequestDto;
+import br.com.judev.bibliotec.entity.Author;
 import br.com.judev.bibliotec.entity.City;
 import br.com.judev.bibliotec.entity.Zipcode;
 import br.com.judev.bibliotec.repository.CityRepository;
@@ -26,38 +27,46 @@ public class ZipcodeServiceImpl implements ZipcodeService{
     private final CityService cityService;
     private final CityRepository cityRepository;
 
-   @Transactional  
-   public Zipcode addZipcode(ZipcodeRequestDto zipcodeRequestDto) {
-
-    if (zipcodeRequestDto == null || zipcodeRequestDto.getName() == null || zipcodeRequestDto.getName().isBlank()) {
-        throw new IllegalArgumentException("Zipcode name cannot be null or blank.");
-    }
-
-      // Verificar duplicidade
-      Optional<Zipcode> existingZipcode = zipcodeRepository.findByName(zipcodeRequestDto.getName());
-      if (existingZipcode.isPresent()) {
-        throw new DuplicateKeyException("Zipcode already exists!");
-      }
-
-      Zipcode newZipcode = new Zipcode();
-      newZipcode.setName(zipcodeRequestDto.getName());
-
-       // Associação da cidade, se fornecida
-     if (zipcodeRequestDto.getCityId() != null) {
-        Optional<City> city = cityRepository.findById(zipcodeRequestDto.getCityId());
-        if (city.isPresent()) {
-            newZipcode.setCity(city.get());
-        } else {
+    @Transactional  
+    public Zipcode addZipcode(ZipcodeRequestDto zipcodeRequestDto) {
+        // Validação do nome do Zipcode
+        if (zipcodeRequestDto == null || zipcodeRequestDto.getName() == null || zipcodeRequestDto.getName().isBlank()) {
+            throw new IllegalArgumentException("Zipcode name cannot be null or blank.");
+        }
+    
+        // Verificação de duplicidade pelo nome do Zipcode
+        Optional<Zipcode> existingZipcode = zipcodeRepository.findByName(zipcodeRequestDto.getName());
+        if (existingZipcode.isPresent()) {
+            throw new DuplicateKeyException("Zipcode with this name already exists!");
+        }
+    
+        // Validação e associação da cidade
+        if (zipcodeRequestDto.getCityId() == null) {
+            throw new IllegalArgumentException("City ID must be provided.");
+        }
+    
+        Optional<City> cityOptional = cityRepository.findById(zipcodeRequestDto.getCityId());
+        if (!cityOptional.isPresent()) {
             throw new IllegalArgumentException("City not found with ID: " + zipcodeRequestDto.getCityId());
         }
-    } else {
-        throw new IllegalArgumentException("City ID must be provided.");
+    
+        City city = cityOptional.get();
+        // Verificação se outro Zipcode já usa a mesma cidade
+        Optional<Zipcode> zipcodeWithSameCity = zipcodeRepository.findByCityId(zipcodeRequestDto.getCityId());
+        if (zipcodeWithSameCity.isPresent()) {
+            throw new IllegalArgumentException("This City ID is already associated with another Zipcode!");
+        }
+    
+        // Instanciar o Zipcode após validação
+        Zipcode newZipcode = new Zipcode();
+        newZipcode.setName(zipcodeRequestDto.getName());
+        newZipcode.setCity(city);
+    
+        // Salvar no repositório com tratamento de exceções
+        return zipcodeRepository.save(newZipcode); // Salvar após validação e instância
     }
-
-    // Salvar no repositório
-    return zipcodeRepository.save(newZipcode);
-}
-
+    
+    
     @Override
     public List<Zipcode> getZipcodes() {
         return zipcodeRepository.findAll();

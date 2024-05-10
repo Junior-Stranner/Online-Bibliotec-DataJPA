@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.judev.bibliotec.dtos.requestDto.AuthorRequestDto;
 import br.com.judev.bibliotec.dtos.responseDto.AuthorResponseDto;
 import br.com.judev.bibliotec.entity.Author;
-import br.com.judev.bibliotec.entity.Category;
 import br.com.judev.bibliotec.entity.Zipcode;
 import br.com.judev.bibliotec.service.AuthorService;
 import io.swagger.v3.oas.annotations.Operation;

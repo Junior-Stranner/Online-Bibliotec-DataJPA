@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class AuthorRequestDto {
     private String name;
-    private Long zipcode;
+    private Long zipcodeId;
 }

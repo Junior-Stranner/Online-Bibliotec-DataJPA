@@ -45,5 +45,10 @@ public class Author {
     public void removeBook(Book book) {
         books.remove(book);
     }
+
+    public Author orElseThrow(Object object) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'orElseThrow'");
+    }
     
 }

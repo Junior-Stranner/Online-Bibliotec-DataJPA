@@ -7,7 +7,6 @@ import java.util.stream.StreamSupport;
 
 import org.springframework.stereotype.Service;
 
-import br.com.judev.bibliotec.dtos.mapper.AuthorMapper;
 import br.com.judev.bibliotec.dtos.mapper.BookMapper;
 import br.com.judev.bibliotec.dtos.requestDto.BookRequestDto;
 import br.com.judev.bibliotec.dtos.responseDto.BookResponseDto;
@@ -118,42 +117,88 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
-     public BookResponseDto addAuthorToBook(Long bookId, Long authorId) {
-
-        // Fetch book and author objects
-        Book book = getBook(bookId);
-        Author author = authorService.getAuthor(authorId);
-
-        // Check for existing association (improved efficiency)
-        if (book.getAuthors().stream().anyMatch(a -> a.getId().equals(authorId))) {
-           throw new IllegalArgumentException("This author is already assigned to this book.");
-       }
-        // Establish bidirectional association
-        book.addAuthor(author);
-        author.addBook(book);
-        // Persist changes using JPA save method
-       bookRepository.save(book); // Save the book object
-        // Return a DTO representatio
-      return BookMapper.ToDto(book);
-   }
-
-
-    @Override
-    public BookResponseDto deleteAuthorFromBook(Long bookId, Long authorId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteAuthorFromBook'");
-    }
-
-    @Override
     public BookResponseDto addCategoryToBook(Long bookId, Long categoryId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addCategoryToBook'");
-    }
+          // Fetch book and author objects
+       Book book = getBook(bookId);
+       Category category = categoryService.getCategory(categoryId); 
+       if(category == null){
+          new IllegalArgumentException("could not find Book with id: " + categoryId);
+       }
+
+       if(book.getCategory() != null){
+        throw new IllegalArgumentException("category already has a book.");
+
+       }
+      // Adicionar a categoria ao livro
+      book.setCategory(category);
+
+      // Persistir as alterações
+      bookRepository.save(book);
+       // Return a DTO representatio
+     return BookMapper.ToDto(book);
+  }
+
+  @Override
+  public BookResponseDto removeCategoryFromBook(Long bookId, Long categoryId) {
+      // Buscar o livro pelo ID
+      Book book = getBook(bookId);
+  
+      // Verificar se o livro possui uma categoria atribuída
+      if (book.getCategory() == null) {
+          throw new IllegalArgumentException("The book does not have any category assigned.");
+      }
+      // Verificar se a categoria a ser removida é a mesma que está atribuída ao livro
+      if (!book.getCategory().getId().equals(categoryId)) {
+          throw new IllegalArgumentException("The specified category is not assigned to this book.");
+      }
+      // Remover a categoria do livro
+      book.setCategory(null);
+  
+      // Persistir as alterações
+      bookRepository.save(book);
+  
+      // Retornar um DTO representando o livro atualizado
+      return BookMapper.ToDto(book);
+  }
+  
+
 
     @Override
-    public BookResponseDto removeCategoryFromBook(Long bookId, Long categoryId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'removeCategoryFromBook'");
-    }
-    
+    public BookResponseDto addAuthorToBook(Long bookId, Long authorId) {
+
+       // Fetch book and author objects
+       Book book = getBook(bookId);
+       Author author = authorService.getAuthor(authorId);
+       // Check for existing association (improved efficiency)
+       if (book.getAuthors().stream().anyMatch(a -> a.getId().equals(authorId))) {
+          throw new IllegalArgumentException("This author is already assigned to this book.");
+      }
+       // Establish bidirectional association
+       book.addAuthor(author);
+       author.addBook(book);
+       // Persist changes using JPA save method
+      bookRepository.save(book); // Save the book object
+       // Return a DTO representatio
+     return BookMapper.ToDto(book);
+  }
+
+
+   @Override
+   public BookResponseDto deleteAuthorFromBook(Long bookId, Long authorId) {
+       Book book = bookRepository.findById(bookId).orElseThrow(() -> 
+             new IllegalArgumentException("could not find Book with id: " + bookId));
+
+      Author author = authorService.getAuthor(authorId);
+
+       // Check for existing association (improved efficiency)
+       if (book.getAuthors().stream().anyMatch(a -> a.getId().equals(authorId))) {
+          throw new IllegalArgumentException("This author is already assigned to this book.");
+      }
+       book.setAuthors(null);
+       author.setBooks(null);
+       // Persist changes using JPA save method
+      bookRepository.save(book); // Save the book object
+       // Return a DTO representatio
+     return BookMapper.ToDto(book);
+   }
 }

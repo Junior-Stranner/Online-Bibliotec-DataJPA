@@ -2,13 +2,12 @@ package br.com.judev.bibliotec.service.serviceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
+import br.com.judev.bibliotec.dtos.mapper.AuthorMapper;
 import br.com.judev.bibliotec.dtos.mapper.BookMapper;
 import br.com.judev.bibliotec.dtos.requestDto.BookRequestDto;
 import br.com.judev.bibliotec.dtos.responseDto.BookResponseDto;
@@ -45,6 +44,7 @@ public class BookServiceImpl implements BookService{
             List<Author> authors = new ArrayList();
             for (Long authorId: bookRequestDto.getAuthorIds()) {
                 Author author = authorService.getAuthor(authorId);
+
                 authors.add(author);
             }
             book.setAuthors(authors);
@@ -86,21 +86,57 @@ public class BookServiceImpl implements BookService{
 
     @Override
     public BookResponseDto editBook(Long bookId, BookRequestDto bookRequestDto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'editBook'");
+        Book bookToEdit = getBook(bookId);
+        bookToEdit.setName(bookRequestDto.getName());
+
+        if (bookRequestDto == null || bookRequestDto.getName() == null || bookRequestDto.getName().isBlank()) {
+            throw new IllegalArgumentException("Book name cannot be null or blank."); // Mensagem corrigida
+        }
+
+        if (!bookRequestDto.getAuthorIds().isEmpty()){
+            List<Author> authors = new ArrayList<>();
+            for (Long authorId: bookRequestDto.getAuthorIds()) {
+                Author author = authorService.getAuthor(authorId);
+                authors.add(author);
+            }
+            bookToEdit.setAuthors(authors);
+        }
+        if (bookRequestDto.getCategoryId() != null) {
+            Category category = categoryService.getCategory(bookRequestDto.getCategoryId());
+            bookToEdit.setCategory(category);
+        }
+
+        bookRepository.save(bookToEdit);
+        return BookMapper.ToDto(bookToEdit);
     }
 
     @Override
     public BookResponseDto deleteBook(Long bookId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteBook'");
+        Book book = getBook(bookId);
+        bookRepository.delete(book);
+        return BookMapper.ToDto(book);
     }
 
     @Override
-    public BookResponseDto addAuthorToBook(Long bookId, Long authorId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'addAuthorToBook'");
-    }
+     public BookResponseDto addAuthorToBook(Long bookId, Long authorId) {
+
+        // Fetch book and author objects
+        Book book = getBook(bookId);
+        Author author = authorService.getAuthor(authorId);
+
+        // Check for existing association (improved efficiency)
+        if (book.getAuthors().stream().anyMatch(a -> a.getId().equals(authorId))) {
+           throw new IllegalArgumentException("This author is already assigned to this book.");
+       }
+        // Establish bidirectional association
+        book.addAuthor(author);
+        author.addBook(book);
+        // Persist changes using JPA save method
+       bookRepository.save(book); // Save the book object
+        // Return a DTO representatio
+      return BookMapper.ToDto(book);
+   }
+
 
     @Override
     public BookResponseDto deleteAuthorFromBook(Long bookId, Long authorId) {

@@ -1,14 +1,12 @@
 package br.com.judev.bibliotec.service.serviceImpl;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import br.com.judev.bibliotec.dtos.requestDto.ZipcodeRequestDto;
-import br.com.judev.bibliotec.entity.Author;
 import br.com.judev.bibliotec.entity.City;
 import br.com.judev.bibliotec.entity.Zipcode;
 import br.com.judev.bibliotec.repository.CityRepository;

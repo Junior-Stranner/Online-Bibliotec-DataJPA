@@ -88,7 +88,6 @@ public class AuthorServiceImpl implements AuthorService{
               throw new IllegalArgumentException("Cannot delete Author with ID: " + authorId + 
                                        " because it's associated with a Zipcode."); 
      }
-
         authorRepository.delete(author);
         return AuthorMapper.ToDto(author);
     }
@@ -97,7 +96,7 @@ public class AuthorServiceImpl implements AuthorService{
     public AuthorResponseDto editAuthor(Long authorId, AuthorRequestDto authorRequestDto) {
         Author edidAuthor = authorRepository.findById(authorId)
         .orElseThrow(() -> new EntityNotFoundException("Author with ID: " + authorId + " could not be found"));
-        
+
         if(authorRequestDto == null || authorRequestDto.getName() == null || authorRequestDto.getName().isBlank()){
             System.out.println("Author name is null or blank.");
             throw new IllegalArgumentException("Author name cannot be null or blank.");

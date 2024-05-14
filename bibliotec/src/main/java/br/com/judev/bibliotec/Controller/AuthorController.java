@@ -25,8 +25,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 
-@RestController
 @RequestMapping("/v1/api/author")
+@RestController
 @AllArgsConstructor
 public class AuthorController {
     
@@ -165,4 +165,5 @@ public class AuthorController {
         AuthorResponseDto authorResponseDto = authorService.deleteZipcodeFromAuthor(authorId);
         return new ResponseEntity<>(authorResponseDto, HttpStatus.OK);
     }
+
 }

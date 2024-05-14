@@ -3,6 +3,8 @@ package br.com.judev.bibliotec.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -21,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Table(name = "Book")
-public class Book {
+public class Book extends RepresentationModel<Book>{
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -5,8 +5,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import org.springframework.stereotype.Service;
 
+import br.com.judev.bibliotec.Controller.AuthorController;
 import br.com.judev.bibliotec.dtos.mapper.AuthorMapper;
 import br.com.judev.bibliotec.dtos.requestDto.AuthorRequestDto;
 import br.com.judev.bibliotec.dtos.responseDto.AuthorResponseDto;
@@ -54,7 +58,9 @@ public class AuthorServiceImpl implements AuthorService{
     
         // Salvar no repositório
         authorRepository.save(author);
-    
+
+        author.add(linkTo(methodOn(AuthorController.class).getAuthor(author.getId())).withSelfRel());
+
         // Retornar como DTO
         return AuthorMapper.ToDto(author);
     }
@@ -65,18 +71,25 @@ public class AuthorServiceImpl implements AuthorService{
          List<Author> authors = StreamSupport
                 .stream(authorRepository.findAll().spliterator(), false)
                 .collect(Collectors.toList());
+
+                authors.forEach(a -> a.add(linkTo(methodOn(AuthorController.class).getAuthor(a.getId())).withSelfRel()));
+
         return AuthorMapper.toListDto(authors);
     }
     @Override
     public AuthorResponseDto getAuthorById(Long authorId) {
        Author author = authorRepository.findById(authorId).orElseThrow(() ->
                 new IllegalArgumentException("could not find Author with id: " + authorId));
+
+                author.add(linkTo(methodOn(AuthorController.class).getAuthor(authorId)).withSelfRel());
+
         return AuthorMapper.ToDto(author);
     }
     @Override
     public Author getAuthor(Long authorId) {
        return authorRepository.findById(authorId).orElseThrow(() ->
                 new IllegalArgumentException("could not find Author with id: " + authorId));
+
     }
 
     @Override
@@ -89,6 +102,9 @@ public class AuthorServiceImpl implements AuthorService{
                                        " because it's associated with a Zipcode."); 
      }
         authorRepository.delete(author);
+
+        author.add(linkTo(methodOn(AuthorController.class).getAuthor(authorId)).withSelfRel());
+
         return AuthorMapper.ToDto(author);
     }
     
@@ -105,6 +121,9 @@ public class AuthorServiceImpl implements AuthorService{
         edidAuthor.setName(authorRequestDto.getName());
 
         authorRepository.save(edidAuthor);
+
+        edidAuthor.add(linkTo(methodOn(AuthorController.class).getAuthor(authorId)).withSelfRel());
+
         return AuthorMapper.ToDto(edidAuthor);
     }
     @Override
@@ -126,6 +145,8 @@ public class AuthorServiceImpl implements AuthorService{
         author.setZipcode(zipcode);
         authorRepository.save(author);
 
+        author.add(linkTo(methodOn(AuthorController.class).getAuthor(authorId)).withSelfRel());
+
         return AuthorMapper.ToDto(author);
     }
     @Override
@@ -141,7 +162,9 @@ public class AuthorServiceImpl implements AuthorService{
         }
 
         author.setZipcode(null);
-    
+
+        author.add(linkTo(methodOn(AuthorController.class).getAuthor(authorId)).withSelfRel());
+
         return AuthorMapper.ToDto(author);
     }
     

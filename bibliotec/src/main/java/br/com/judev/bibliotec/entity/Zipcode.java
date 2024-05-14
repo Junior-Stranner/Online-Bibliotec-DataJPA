@@ -1,5 +1,7 @@
 package br.com.judev.bibliotec.entity;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @Table(name = "Zipcode")
-public class Zipcode {
+public class Zipcode extends RepresentationModel<Zipcode>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

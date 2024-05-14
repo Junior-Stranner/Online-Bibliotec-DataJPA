@@ -8,6 +8,8 @@ import java.util.stream.StreamSupport;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
+import br.com.judev.bibliotec.Controller.BookController;
+import br.com.judev.bibliotec.Controller.CategoryController;
 import br.com.judev.bibliotec.dtos.mapper.CategoryMapper;
 import br.com.judev.bibliotec.dtos.requestDto.CategoryRequestDto;
 import br.com.judev.bibliotec.dtos.responseDto.CategoryResponseDto;
@@ -16,6 +18,10 @@ import br.com.judev.bibliotec.repository.CategoryRepository;
 import br.com.judev.bibliotec.service.CategoryService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 
 @Service
 @AllArgsConstructor
@@ -47,6 +53,9 @@ public class CategoryServiceImpl implements CategoryService {
         category.setName(categoryRequestDto.getName());
         
         categoryRepository.save(category);
+
+        category.add(linkTo(methodOn(CategoryController.class).getCategory(category.getId())).withSelfRel());
+
         return CategoryMapper.ToDto(category);
     }
 
@@ -61,6 +70,9 @@ public class CategoryServiceImpl implements CategoryService {
      List<Category> categories = StreamSupport
                 .stream(categoryRepository.findAll().spliterator(), false)
                 .collect(Collectors.toList());
+
+                categories.forEach(c -> c.add(linkTo(methodOn(CategoryController.class).getCategory(c.getId())).withSelfRel()));
+
         return CategoryMapper.toListDto(categories);
     }
 
@@ -68,6 +80,9 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryResponseDto deleteCategory(Long categoryId) {
         Category category = getCategory(categoryId);
         categoryRepository.delete(category);
+
+        category.add(linkTo(methodOn(CategoryController.class).getCategory(category.getId())).withSelfRel());
+
         return CategoryMapper.ToDto(category);
     }
 
@@ -93,7 +108,8 @@ public class CategoryServiceImpl implements CategoryService {
         
         // Salvar as mudanças no repositório
         categoryRepository.save(categoryToEdit);
-    
+
+        categoryToEdit.add(linkTo(methodOn(CategoryController.class).getCategory(categoryToEdit.getId())).withSelfRel());
         // Retornar a Category como DTO
         return CategoryMapper.ToDto(categoryToEdit);
     }

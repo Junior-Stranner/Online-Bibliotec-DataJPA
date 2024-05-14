@@ -7,6 +7,7 @@ import java.util.stream.StreamSupport;
 
 import org.springframework.stereotype.Service;
 
+import br.com.judev.bibliotec.Controller.BookController;
 import br.com.judev.bibliotec.dtos.mapper.BookMapper;
 import br.com.judev.bibliotec.dtos.requestDto.BookRequestDto;
 import br.com.judev.bibliotec.dtos.responseDto.BookResponseDto;
@@ -18,6 +19,11 @@ import br.com.judev.bibliotec.service.AuthorService;
 import br.com.judev.bibliotec.service.BookService;
 import br.com.judev.bibliotec.service.CategoryService;
 import lombok.AllArgsConstructor;
+
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 
 @Service
 @AllArgsConstructor
@@ -58,6 +64,9 @@ public class BookServiceImpl implements BookService{
      }
 
         Book book1 = bookRepository.save(book);
+
+        book1.add(linkTo(methodOn(BookController.class).getBook(book.getId())).withSelfRel());
+
         return BookMapper.ToDto(book1);
     }
 
@@ -65,6 +74,9 @@ public class BookServiceImpl implements BookService{
     public BookResponseDto getBookById(Long bookId) {
      Book book = bookRepository.findById(bookId).orElseThrow(() -> 
           new IllegalArgumentException("could not find Book with id: " + bookId));
+
+          book.add(linkTo(methodOn(BookController.class).getBook(book.getId())).withSelfRel());
+
      return BookMapper.ToDto(book);
     }
 
@@ -80,6 +92,9 @@ public class BookServiceImpl implements BookService{
         List<Book> books = StreamSupport
                 .stream(bookRepository.findAll().spliterator(), false)
                 .collect(Collectors.toList());
+
+                books.forEach(b -> b.add(linkTo(methodOn(BookController.class).getBook(b.getId())).withSelfRel()));
+
         return BookMapper.toListDto(books);
     }
 
@@ -106,6 +121,9 @@ public class BookServiceImpl implements BookService{
         }
 
         bookRepository.save(bookToEdit);
+
+        bookToEdit.add(linkTo(methodOn(BookController.class).getBook(bookToEdit.getId())).withSelfRel());
+
         return BookMapper.ToDto(bookToEdit);
     }
 
@@ -113,6 +131,9 @@ public class BookServiceImpl implements BookService{
     public BookResponseDto deleteBook(Long bookId) {
         Book book = getBook(bookId);
         bookRepository.delete(book);
+
+        book.add(linkTo(methodOn(BookController.class).getBook(book.getId())).withSelfRel());
+
         return BookMapper.ToDto(book);
     }
 
@@ -134,6 +155,9 @@ public class BookServiceImpl implements BookService{
 
       // Persistir as alterações
       bookRepository.save(book);
+
+      book.add(linkTo(methodOn(BookController.class).getBook(book.getId())).withSelfRel());
+
        // Return a DTO representatio
      return BookMapper.ToDto(book);
   }
@@ -156,6 +180,8 @@ public class BookServiceImpl implements BookService{
   
       // Persistir as alterações
       bookRepository.save(book);
+
+      book.add(linkTo(methodOn(BookController.class).getBook(book.getId())).withSelfRel());
   
       // Retornar um DTO representando o livro atualizado
       return BookMapper.ToDto(book);
@@ -176,6 +202,9 @@ public class BookServiceImpl implements BookService{
        author.addBook(book);
        // Persist changes using JPA save method
       bookRepository.save(book); // Save the book object
+
+      book.add(linkTo(methodOn(BookController.class).getBook(book.getId())).withSelfRel());
+
        // Return a DTO representatio
      return BookMapper.ToDto(book);
   }
@@ -196,6 +225,8 @@ public class BookServiceImpl implements BookService{
        author.setBooks(null);
        // Persist changes using JPA save method
       bookRepository.save(book); // Save the book object
+
+      book.add(linkTo(methodOn(BookController.class).getBook(book.getId())).withSelfRel());
        // Return a DTO representatio
      return BookMapper.ToDto(book);
    }

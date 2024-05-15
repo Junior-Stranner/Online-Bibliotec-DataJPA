@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS Zipcode (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    city_id BIGINT,
+    CONSTRAINT fk_city FOREIGN KEY (city_id) REFERENCES City(id)
+);

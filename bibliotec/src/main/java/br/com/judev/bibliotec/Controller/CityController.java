@@ -2,6 +2,9 @@ package br.com.judev.bibliotec.Controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -11,13 +14,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
+import br.com.judev.bibliotec.dtos.PageableDto;
+import br.com.judev.bibliotec.dtos.mapper.PageableMapper;
 import br.com.judev.bibliotec.entity.City;
+import br.com.judev.bibliotec.repository.Projection.CityProjection;
 import br.com.judev.bibliotec.service.CityService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -80,11 +87,12 @@ public class CityController {
             @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
          }
 )
-    @GetMapping(value = "/getall", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<City>> getCities() {
-        List<City> cities = cityService.getCities();
-        return new ResponseEntity<List<City>>(cities, HttpStatus.OK);
-    }
+   @GetMapping(value = "/getall", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PageableDto> getCities(@Parameter(hidden = true) @PageableDefault(size = 5, sort = {"nome"}) Pageable pageable) {
+         Page<CityProjection> cities = cityService.getCities(pageable);
+      return ResponseEntity.ok(PageableMapper.toDto(cities));
+}
+
 
     @Operation(summary = "Updates a City",
 		description = "Updates a City by passing in a JSON, XML or YML representation of the City!",

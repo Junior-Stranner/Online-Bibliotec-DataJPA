@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.judev.bibliotec.entity.City;
 import br.com.judev.bibliotec.repository.CityRepository;
+import br.com.judev.bibliotec.repository.Projection.CityProjection;
 import br.com.judev.bibliotec.service.CityService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -35,11 +38,11 @@ public class CItyServiceImpl implements CityService{
             return cityRepository.save(city);
         }
 
-    @Override
-    public List<City> getCities() {
-      return cityRepository.findAll();
+      @Override
+     public Page<CityProjection> getCities(Pageable pageable) {
+           return cityRepository.findAllPageable(pageable);
+}
 
-    }
 
     @Override
     public City getCity(Long cityId) {
@@ -72,5 +75,5 @@ public class CItyServiceImpl implements CityService{
         cityToEdit.setName(city.getName());  
         return cityRepository.save(cityToEdit); 
     }
-    
+
 }

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.judev.bibliotec.dtos.requestDto.ZipcodeRequestDto;
@@ -68,7 +70,6 @@ public class ZipcodeServiceImpl implements ZipcodeService{
     @Override
     public List<Zipcode> getZipcodes() {
         return zipcodeRepository.findAll();
-        
     }
 
     @Override
@@ -139,5 +140,10 @@ public class ZipcodeServiceImpl implements ZipcodeService{
     
         return zipcodeRepository.save(zipcode);
     }
+
+      @Override
+    public Page<Zipcode> findAll(Pageable pageable) {
+        return zipcodeRepository.findAll(pageable);
+     }
 
 }

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import br.com.judev.bibliotec.entity.City;
 import br.com.judev.bibliotec.repository.CityRepository;
-import br.com.judev.bibliotec.repository.Projection.CityProjection;
 import br.com.judev.bibliotec.service.CityService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -20,7 +19,6 @@ import lombok.AllArgsConstructor;
 public class CItyServiceImpl implements CityService{
 
         private final CityRepository cityRepository;
-
     
         @Override
         public City addCity(City city) {
@@ -38,11 +36,10 @@ public class CItyServiceImpl implements CityService{
             return cityRepository.save(city);
         }
 
-      @Override
-     public Page<CityProjection> getCities(Pageable pageable) {
-           return cityRepository.findAllPageable(pageable);
-}
-
+        @Override
+        public List<City> getCities( ) {
+            return cityRepository.findAll();
+        }
 
     @Override
     public City getCity(Long cityId) {
@@ -76,4 +73,9 @@ public class CItyServiceImpl implements CityService{
         return cityRepository.save(cityToEdit); 
     }
 
+
+    @Override
+    public Page<City> findAll(Pageable pageable) {
+        return cityRepository.findAll(pageable);
+     }
 }

@@ -2,12 +2,12 @@ package br.com.judev.bibliotec.service.serviceImpl;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.judev.bibliotec.Controller.AuthorController;
@@ -66,7 +66,7 @@ public class AuthorServiceImpl implements AuthorService{
     }
     
 
-    @Override
+ /*    @Override
     public List<AuthorResponseDto> getAuthors() {
          List<Author> authors = StreamSupport
                 .stream(authorRepository.findAll().spliterator(), false)
@@ -75,7 +75,18 @@ public class AuthorServiceImpl implements AuthorService{
                 authors.forEach(a -> a.add(linkTo(methodOn(AuthorController.class).getAuthor(a.getId())).withSelfRel()));
 
         return AuthorMapper.toListDto(authors);
+    }*/
+
+     @Override
+    public List<AuthorResponseDto> getAuthors(Pageable pageable) {
+        Page<Author> authoPages = authorRepository.findAll(pageable);
+        List<Author> authors = authoPages.getContent();
+        
+        authors.forEach(a -> a.add(linkTo(methodOn(AuthorController.class).getAuthor(a.getId())).withSelfRel()));
+        return AuthorMapper.toListDto(authors);
     }
+
+
     @Override
     public AuthorResponseDto getAuthorById(Long authorId) {
        Author author = authorRepository.findById(authorId).orElseThrow(() ->

@@ -2,9 +2,9 @@ package br.com.judev.bibliotec.service.serviceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.judev.bibliotec.Controller.BookController;
@@ -87,7 +87,7 @@ public class BookServiceImpl implements BookService{
 
     }
 
-    @Override
+  /*   @Override
     public List<BookResponseDto> getBooks() {
         List<Book> books = StreamSupport
                 .stream(bookRepository.findAll().spliterator(), false)
@@ -96,7 +96,19 @@ public class BookServiceImpl implements BookService{
                 books.forEach(b -> b.add(linkTo(methodOn(BookController.class).getBook(b.getId())).withSelfRel()));
 
         return BookMapper.toListDto(books);
-    }
+    }*/
+
+    @Override
+    public List<BookResponseDto> getBooks(Pageable pageable) {
+     Page<Book> bookPage = bookRepository.findAll(pageable);
+     List<Book> books = bookPage.getContent();
+
+    // Adicionar links HATEOAS a cada livro na página
+    books.forEach(b -> b.add(linkTo(methodOn(BookController.class).getBook(b.getId())).withSelfRel()));
+    // Converter a página de Book para uma página de BookResponseDto
+      return BookMapper.toListDto(books);
+  }
+
 
     @Override
     public BookResponseDto editBook(Long bookId, BookRequestDto bookRequestDto) {

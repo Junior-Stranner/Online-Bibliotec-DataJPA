@@ -2,6 +2,8 @@ package br.com.judev.bibliotec.Controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.judev.bibliotec.dtos.requestDto.CategoryRequestDto;
@@ -50,6 +53,7 @@ public class CategoryController {
         CategoryResponseDto categoryResponseDto = categoryService.addCategory(categoryRequestDto);
         return new ResponseEntity<>(categoryResponseDto, HttpStatus.OK);
     }
+    
 
     @Operation(summary = "Finds a Category", description = "Finds a Category",
     tags = {"Category"},
@@ -82,10 +86,18 @@ public class CategoryController {
             @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
          }
 )
-    @GetMapping(value = "/getAll" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+ /*    @GetMapping(value = "/getAll" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<CategoryResponseDto>> getCategories() {
         List<CategoryResponseDto> categoryResponseDtos = categoryService.getCategories();
         return new ResponseEntity<>(categoryResponseDtos, HttpStatus.OK);
+    }*/
+
+    @GetMapping(value = "/getall", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<CategoryResponseDto>> findAll(@RequestParam(defaultValue = "0") int page,
+                                @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        List<CategoryResponseDto> categoryPage = categoryService.getCategories(pageable);
+        return ResponseEntity.ok(categoryPage);
     }
 
 

@@ -2,6 +2,7 @@ package br.com.judev.bibliotec.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.judev.bibliotec.dtos.requestDto.BookRequestDto;
@@ -13,7 +14,7 @@ public interface BookService {
      public BookResponseDto addBook(BookRequestDto bookRequestDto);
     public BookResponseDto getBookById(Long bookId);
     public Book getBook(Long bookId);
-    public List<BookResponseDto> getBooks();
+    public List<BookResponseDto> getBooks(Pageable pageable);
     public BookResponseDto editBook(Long bookId, BookRequestDto bookRequestDto);
     public BookResponseDto deleteBook(Long bookId);
     public BookResponseDto addAuthorToBook(Long bookId, Long authorId);

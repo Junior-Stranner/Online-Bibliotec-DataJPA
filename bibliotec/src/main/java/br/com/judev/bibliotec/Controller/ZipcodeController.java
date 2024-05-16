@@ -2,6 +2,9 @@ package br.com.judev.bibliotec.Controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,9 +15,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.judev.bibliotec.dtos.requestDto.ZipcodeRequestDto;
+import br.com.judev.bibliotec.entity.City;
 import br.com.judev.bibliotec.entity.Zipcode;
 import br.com.judev.bibliotec.service.ZipcodeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -73,7 +78,7 @@ public class ZipcodeController {
     tags = {"zipcodes"},
     responses = {
         @ApiResponse(description = "Success", responseCode = "200",
-               content = { @Content(mediaType = "application/json", 
+               content = { @Content(mediaType = "application/json",
                array = @ArraySchema(schema = @Schema(implementation = Zipcode.class)))}),
             @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
             @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
@@ -81,10 +86,12 @@ public class ZipcodeController {
             @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
          }
 )
-    @GetMapping(value = "/getAll" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Zipcode>> getZipcodes() {
-        List<Zipcode> zipcodes = zipcodeService.getZipcodes();
-        return new ResponseEntity<>(zipcodes, HttpStatus.OK);
+     @GetMapping(value = "/getAll", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Page<Zipcode>> findAll(@RequestParam(defaultValue = "0") int page,
+                                @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Zipcode> zipcodePage = zipcodeService.findAll(pageable);
+        return ResponseEntity.ok(zipcodePage);
     }
 
       @Operation(summary = "delete a Zipcode",

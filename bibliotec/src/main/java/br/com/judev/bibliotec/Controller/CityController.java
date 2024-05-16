@@ -1,10 +1,8 @@
 package br.com.judev.bibliotec.Controller;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,13 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import br.com.judev.bibliotec.dtos.PageableDto;
-import br.com.judev.bibliotec.dtos.mapper.PageableMapper;
 import br.com.judev.bibliotec.entity.City;
-import br.com.judev.bibliotec.repository.Projection.CityProjection;
+import br.com.judev.bibliotec.entity.Zipcode;
 import br.com.judev.bibliotec.service.CityService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -87,11 +82,13 @@ public class CityController {
             @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
          }
 )
-   @GetMapping(value = "/getall", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PageableDto> getCities(@Parameter(hidden = true) @PageableDefault(size = 5, sort = {"nome"}) Pageable pageable) {
-         Page<CityProjection> cities = cityService.getCities(pageable);
-      return ResponseEntity.ok(PageableMapper.toDto(cities));
-}
+    @GetMapping(value = "/getall", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Page<City>> findAll(@RequestParam(defaultValue = "0") int page,
+                                @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<City> cityPage = cityService.findAll(pageable);
+        return ResponseEntity.ok(cityPage);
+    }
 
 
     @Operation(summary = "Updates a City",

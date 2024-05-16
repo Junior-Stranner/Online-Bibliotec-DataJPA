@@ -2,6 +2,8 @@ package br.com.judev.bibliotec.Controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.judev.bibliotec.dtos.requestDto.BookRequestDto;
@@ -81,12 +84,22 @@ public class BookController {
             @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
          }
 )
-    @GetMapping(value = "/getAll" , consumes = MediaType.APPLICATION_JSON_VALUE , produces = MediaType.APPLICATION_JSON_VALUE)
+   /*  @GetMapping(value = "/getAll" , consumes = MediaType.APPLICATION_JSON_VALUE , produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<BookResponseDto>> getBooks() {
         List<BookResponseDto> bookResponseDtos = bookService.getBooks();
         return new ResponseEntity<>(bookResponseDtos, HttpStatus.OK);
     
+    }*/
+
+    @GetMapping(value = "/getall", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<BookResponseDto>> findAll(@RequestParam(defaultValue = "0") int page,
+                                @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        List<BookResponseDto> bookPage = bookService.getBooks(pageable);
+        return ResponseEntity.ok(bookPage);
     }
+
+
     @PostMapping("/addCategory/{categoryId}/to/{bookId}")
     public ResponseEntity<BookResponseDto> addCategory(@PathVariable final Long categoryId,
                                                        @PathVariable final Long bookId) {

@@ -2,13 +2,13 @@ package br.com.judev.bibliotec.service.serviceImpl;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+
 
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import br.com.judev.bibliotec.Controller.BookController;
 import br.com.judev.bibliotec.Controller.CategoryController;
 import br.com.judev.bibliotec.dtos.mapper.CategoryMapper;
 import br.com.judev.bibliotec.dtos.requestDto.CategoryRequestDto;
@@ -65,8 +65,8 @@ public class CategoryServiceImpl implements CategoryService {
         return CategoryMapper.ToDto(category);
     }
 
-    @Override
-    public List<CategoryResponseDto> getCategories() {
+ /*    @Override
+    public List<CategoryResponseDto> getCategories(Pageable pageable) {
      List<Category> categories = StreamSupport
                 .stream(categoryRepository.findAll().spliterator(), false)
                 .collect(Collectors.toList());
@@ -74,8 +74,16 @@ public class CategoryServiceImpl implements CategoryService {
                 categories.forEach(c -> c.add(linkTo(methodOn(CategoryController.class).getCategory(c.getId())).withSelfRel()));
 
         return CategoryMapper.toListDto(categories);
+    }*/
+    @Override
+    public List<CategoryResponseDto> getCategories(Pageable pageable) {
+        Page<Category> categoryPage = categoryRepository.findAll(pageable);
+        List<Category> categories = categoryPage.getContent();
+        
+        categories.forEach(c -> c.add(linkTo(methodOn(CategoryController.class).getCategory(c.getId())).withSelfRel()));
+        return CategoryMapper.toListDto(categories);
     }
-
+    
     @Override
     public CategoryResponseDto deleteCategory(Long categoryId) {
         Category category = getCategory(categoryId);

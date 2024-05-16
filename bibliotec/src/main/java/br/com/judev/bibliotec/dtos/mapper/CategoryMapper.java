@@ -1,5 +1,6 @@
 package br.com.judev.bibliotec.dtos.mapper;
 
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,8 +19,9 @@ public class CategoryMapper {
         return new ModelMapper().map(entity,CategoryResponseDto.class);
     }
 
-    
-    public static List<CategoryResponseDto> toListDto(List<Category> categorys) {
-        return categorys.stream().map(category -> ToDto(category)).collect(Collectors.toList());
+      
+    public static List<CategoryResponseDto> toListDto(List<Category> Categorys) {
+        return Categorys.stream().map(category -> ToDto(category)).collect(Collectors.toList());
     }
 }
+

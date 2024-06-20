@@ -12,10 +12,14 @@ All Books , you can´t see Author , but in next pic you see it is register with 
 ![Books](https://github.com/Junior-Stranner/Online-Bibliotec-DataJPA/assets/116032249/4c49a51c-89d9-4fc1-b0b7-43f70563282c)
 
 
+
+
 here you will se the ManyToMany Authors and Books together , don´t know why doesn't it show on POSTMAN , but it is working normaly 
 ![Book and Author manyTomany ](https://github.com/Junior-Stranner/Online-Bibliotec-DataJPA/assets/116032249/ff0b4ff2-fe4a-4ae3-af05-9ecb2d8772de)
 
 
 
+
 All zipcodes and they citys in Brazil 
-![Get All zipcodes with Citys](https://github.com/Junior-Stranner/Online-Bibliotec-DataJPA/assets/116032249/9d400218-f5e5-432d-ac33-8ecefc448aee)![Book and Author manyTomany ]
+
+![Get All zipcodes with Citys](https://github.com/Junior-Stranner/Online-Bibliotec-DataJPA/assets/116032249/9d400218-f5e5-432d-ac33-8ecefc448aee)

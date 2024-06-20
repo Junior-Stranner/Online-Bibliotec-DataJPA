@@ -3,6 +3,7 @@ package br.com.judev.bibliotec.service.serviceImpl;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -36,38 +37,37 @@ public class BookServiceImpl implements BookService{
 
     @Override
     public BookResponseDto addBook(BookRequestDto bookRequestDto) {
-        Book book = new Book();
-        book.setName(bookRequestDto.getName());
-
+        // Validações básicas
         if (bookRequestDto == null || bookRequestDto.getName() == null || bookRequestDto.getName().isBlank()) {
-            throw new IllegalArgumentException("Book name cannot be null or blank."); // Mensagem corrigida
+            throw new IllegalArgumentException("Book name cannot be null or blank.");
         }
-
-        if (bookRequestDto.getAuthorIds().isEmpty()) {
-            throw new IllegalArgumentException("you need atleast on author");
-        } else {
-            List<Author> authors = new ArrayList();
-            for (Long authorId: bookRequestDto.getAuthorIds()) {
-                Author author = authorService.getAuthor(authorId);
-
-                authors.add(author);
-            }
-            book.setAuthors(authors);
+        if (bookRequestDto.getAuthorIds() == null || bookRequestDto.getAuthorIds().isEmpty()) {
+            throw new IllegalArgumentException("You need at least one author.");
         }
         if (bookRequestDto.getCategoryId() == null) {
-            throw new IllegalArgumentException("book atleast on category");
-        }else{
+            throw new IllegalArgumentException("Category ID must be provided.");
+        }
 
+        List<Author> authors = new ArrayList<>();
+        for (Long authorId : bookRequestDto.getAuthorIds()) {
+            Author author = authorService.getAuthor(authorId);
+            if (author == null) {
+                throw new EntityNotFoundException("Author not found with ID: " + authorId);
+            }
+            authors.add(author);
+        }
         Category category = categoryService.getCategory(bookRequestDto.getCategoryId());
+        if (category == null) {
+            throw new EntityNotFoundException("Category not found with ID: " + bookRequestDto.getCategoryId());
+        }
+        Book book = new Book();
+        book.setName(bookRequestDto.getName());
+        book.setAuthors(authors);
         book.setCategory(category);
 
-     }
+        Book savedBook = bookRepository.save(book);
 
-        Book book1 = bookRepository.save(book);
-
-        book1.add(linkTo(methodOn(BookController.class).getBook(book.getId())).withSelfRel());
-
-        return BookMapper.ToDto(book1);
+        return BookMapper.ToDto(savedBook);
     }
 
     @Override
@@ -83,10 +83,9 @@ public class BookServiceImpl implements BookService{
     @Override
     public Book getBook(Long bookId) {
         return bookRepository.findById(bookId).orElseThrow(() ->
-        new IllegalArgumentException("could not find Book with id: " + bookId));
+                new IllegalArgumentException("could not find Book with id: " + bookId));
 
     }
-
   /*   @Override
     public List<BookResponseDto> getBooks() {
         List<Book> books = StreamSupport
@@ -97,7 +96,6 @@ public class BookServiceImpl implements BookService{
 
         return BookMapper.toListDto(books);
     }*/
-
     @Override
     public List<BookResponseDto> getBooks(Pageable pageable) {
      Page<Book> bookPage = bookRepository.findAll(pageable);
@@ -108,7 +106,6 @@ public class BookServiceImpl implements BookService{
     // Converter a página de Book para uma página de BookResponseDto
       return BookMapper.toListDto(books);
   }
-
 
     @Override
     public BookResponseDto editBook(Long bookId, BookRequestDto bookRequestDto) {
@@ -162,10 +159,8 @@ public class BookServiceImpl implements BookService{
         throw new IllegalArgumentException("category already has a book.");
 
        }
-      // Adicionar a categoria ao livro
       book.setCategory(category);
 
-      // Persistir as alterações
       bookRepository.save(book);
 
       book.add(linkTo(methodOn(BookController.class).getBook(book.getId())).withSelfRel());
@@ -202,8 +197,7 @@ public class BookServiceImpl implements BookService{
     @Override
     public BookResponseDto addAuthorToBook(Long bookId, Long authorId) {
 
-       // Fetch book and author objects
-       Book book = getBook(bookId);
+        Book book = getBook(bookId);
        Author author = authorService.getAuthor(authorId);
        // Check for existing association (improved efficiency)
        if (book.getAuthors().stream().anyMatch(a -> a.getId().equals(authorId))) {

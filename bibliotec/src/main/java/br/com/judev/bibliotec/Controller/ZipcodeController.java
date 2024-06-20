@@ -143,7 +143,7 @@ public class ZipcodeController {
         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
     }
 )
-    @PostMapping(value = "/addCity/{cityId}/toZipcode/{zipcodeId}" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/addCity/{cityId}/to/Zipcode/{zipcodeId}" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Zipcode> addCity(@PathVariable final Long cityId,
                                            @PathVariable final Long zipcodeId) {
         Zipcode zipcode = zipcodeService.addCityToZipcode(zipcodeId, cityId);

@@ -40,13 +40,12 @@ public class CategoryServiceImpl implements CategoryService {
 
           // Verificar se a entrada e o nome da cidade são válidos
             if (categoryRequestDto == null || categoryRequestDto.getName() == null || categoryRequestDto.getName().isBlank()) {
-                System.out.println("City name is null or blank.");
-                throw new IllegalArgumentException("City name cannot be null or blank.");
+                System.out.println("Category name is null or blank.");
+                throw new IllegalArgumentException("Category name cannot be null or blank.");
             }
-        
             Optional<Category> existingCategory = categoryRepository.findByName(categoryRequestDto.getName());
              if (existingCategory.isPresent()) {
-                throw new DuplicateKeyException("City already exists!");
+                throw new DuplicateKeyException("Category already exists!");
             }
 
         Category category = new Category();

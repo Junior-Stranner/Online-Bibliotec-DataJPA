@@ -119,7 +119,13 @@ public class ZipcodeServiceImpl implements ZipcodeService{
         if (zipcode.getCity() != null) {
             throw new IllegalArgumentException("Zipcode already has a city.");
         }
-    
+
+        // Verificação se outro Zipcode já usa a mesma cidade
+        Optional<Zipcode> zipcodeWithSameCity = zipcodeRepository.findByCityId(cityId);
+        if (zipcodeWithSameCity.isPresent()) {
+            throw new IllegalArgumentException("This City ID is already associated with another Zipcode!");
+        }
+
         zipcode.setCity(city);
     
         return zipcodeRepository.save(zipcode);

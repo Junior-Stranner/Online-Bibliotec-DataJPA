@@ -33,25 +33,21 @@ public class AuthorServiceImpl implements AuthorService{
 
     @Override
     public AuthorResponseDto addAuthor(AuthorRequestDto authorRequestDto) {
-        // Corrigir mensagem de erro e validar antes de instanciar
+
         if (authorRequestDto == null || authorRequestDto.getName() == null || authorRequestDto.getName().isBlank()) {
             throw new IllegalArgumentException("Author name cannot be null or blank."); // Mensagem corrigida
         }
-    
         if (authorRequestDto.getZipcodeId() == null) {
             throw new IllegalArgumentException("Zipcode ID must be provided."); // Mensagem corrigida
         }
-    
-        // Verificar se o Zipcode existe
+
         Optional<Zipcode> optionalZipcode = zipcodeRepository.findById(authorRequestDto.getZipcodeId());
         if (!optionalZipcode.isPresent()) {
             throw new IllegalArgumentException("Zipcode not found with ID: " + authorRequestDto.getZipcodeId());
         }
     
-        // Verificar se o Zipcode já está associado a outro autor
         Zipcode zipcode = optionalZipcode.get(); // Pegar o Zipcode após validação
     
-        // Instanciar o Author após validação
         Author author = new Author();
         author.setName(authorRequestDto.getName());
         author.setZipcode(zipcode);
@@ -143,12 +139,10 @@ public class AuthorServiceImpl implements AuthorService{
         if (author == null) {
             throw new EntityNotFoundException("author with ID " + authorId + " not found.");
         }
-    
         Zipcode zipcode = zipcodeService.getZipcode(zipcodeId);
         if (zipcode == null) {
             throw new EntityNotFoundException("Zipcode with ID " + zipcodeId + " not found.");
         }
-    
         if (author.getZipcode() != null) {
             throw new IllegalArgumentException("Zipcode already has a author.");
         }
@@ -167,11 +161,9 @@ public class AuthorServiceImpl implements AuthorService{
         if(author == null){
             throw new EntityNotFoundException("Zipcode with ID " + authorId + " not found.");
         }
-
         if(author.getZipcode() == null){
             throw new IllegalArgumentException("Author does not have a Zipcode to remove.");
         }
-
         author.setZipcode(null);
 
         author.add(linkTo(methodOn(AuthorController.class).getAuthor(authorId)).withSelfRel());

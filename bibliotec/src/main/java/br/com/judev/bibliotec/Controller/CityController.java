@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import br.com.judev.bibliotec.entity.City;
-import br.com.judev.bibliotec.entity.Zipcode;
 import br.com.judev.bibliotec.service.CityService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;

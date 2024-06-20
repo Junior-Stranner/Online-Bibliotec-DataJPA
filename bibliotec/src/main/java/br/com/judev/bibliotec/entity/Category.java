@@ -25,7 +25,7 @@ public class Category extends RepresentationModel<Category>{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
     private List<Book> books = new ArrayList<>();
 
     public Category(String name, List<Book> books) {

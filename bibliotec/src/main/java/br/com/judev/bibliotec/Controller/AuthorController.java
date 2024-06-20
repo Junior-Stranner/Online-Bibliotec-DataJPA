@@ -154,7 +154,7 @@ public class AuthorController {
         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
     }
 )
-    @PostMapping("/addZipcode/{zipcodeId}/toAuthor/{authorId}")
+    @PostMapping("/addZipcode/{zipcodeId}/to/Author/{authorId}")
     private ResponseEntity<AuthorResponseDto> addZipcode(@PathVariable final Long zipcodeId,
                                                          @PathVariable final Long authorId) {
         AuthorResponseDto authorResponseDto = authorService.addZipcodeToAuthor(authorId, zipcodeId);

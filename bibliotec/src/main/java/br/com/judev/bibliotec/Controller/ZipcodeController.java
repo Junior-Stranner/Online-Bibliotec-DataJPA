@@ -56,7 +56,7 @@ public class ZipcodeController {
     }
 
 
-    @Operation(summary = "Finds a Zipcode", description = "Finds a Zipcode",
+    @Operation(summary = "Find a Zipcode", description = "Finds a Zipcode",
     tags = {"Zipcode"},
     responses = {
           @ApiResponse(description = "Success", responseCode = "200",

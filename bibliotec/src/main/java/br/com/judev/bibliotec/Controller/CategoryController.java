@@ -86,12 +86,6 @@ public class CategoryController {
             @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
          }
 )
- /*    @GetMapping(value = "/getAll" , consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<CategoryResponseDto>> getCategories() {
-        List<CategoryResponseDto> categoryResponseDtos = categoryService.getCategories();
-        return new ResponseEntity<>(categoryResponseDtos, HttpStatus.OK);
-    }*/
-
     @GetMapping(value = "/getall", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<CategoryResponseDto>> findAll(@RequestParam(defaultValue = "0") int page,
                                 @RequestParam(defaultValue = "10") int size) {

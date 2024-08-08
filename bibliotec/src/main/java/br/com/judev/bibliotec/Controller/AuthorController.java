@@ -161,8 +161,8 @@ public class AuthorController {
         return new ResponseEntity<>(authorResponseDto, HttpStatus.OK);
     }
 
-    @Operation(summary = "delete city on  Author",
-    description = "delete a city on a Zipcode by passing in a JSON, XML or YML representation of the Author!",
+    @Operation(summary = "delete city from  Author",
+    description = "delete a city from Author by passing in a JSON, XML or YML representation of the Author!",
     tags = {"Author"},
     responses = { 
         @ApiResponse(description = "delete", responseCode = "200",
@@ -173,7 +173,7 @@ public class AuthorController {
         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
     }
 )
-    @DeleteMapping("/removeZipcode/{authorId}")
+    @DeleteMapping("/removeZipcode/from/{authorId}")
     private ResponseEntity<AuthorResponseDto> removeZipcode(@PathVariable final Long authorId) {
         AuthorResponseDto authorResponseDto = authorService.deleteZipcodeFromAuthor(authorId);
         return new ResponseEntity<>(authorResponseDto, HttpStatus.OK);

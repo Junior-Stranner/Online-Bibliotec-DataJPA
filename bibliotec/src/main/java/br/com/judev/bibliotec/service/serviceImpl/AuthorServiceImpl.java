@@ -45,13 +45,13 @@ public class AuthorServiceImpl implements AuthorService{
         if (!optionalZipcode.isPresent()) {
             throw new IllegalArgumentException("Zipcode not found with ID: " + authorRequestDto.getZipcodeId());
         }
-    
+
         Zipcode zipcode = optionalZipcode.get(); // Pegar o Zipcode após validação
-    
+
         Author author = new Author();
         author.setName(authorRequestDto.getName());
         author.setZipcode(zipcode);
-    
+
         // Salvar no repositório
         authorRepository.save(author);
 
@@ -60,7 +60,6 @@ public class AuthorServiceImpl implements AuthorService{
         // Retornar como DTO
         return AuthorMapper.ToDto(author);
     }
-    
 
  /*    @Override
     public List<AuthorResponseDto> getAuthors() {

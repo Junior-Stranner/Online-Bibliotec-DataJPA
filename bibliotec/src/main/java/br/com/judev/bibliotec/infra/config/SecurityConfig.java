@@ -1,6 +1,7 @@
 package br.com.judev.bibliotec.infra.config;
 
 import br.com.judev.bibliotec.infra.security.CustomUserDetailsService;
+import br.com.judev.bibliotec.infra.security.SecurityFilter;
 import br.com.judev.bibliotec.infra.security.TokenService;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
@@ -8,6 +9,7 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -22,13 +24,13 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
+@RequiredArgsConstructor
 @SecurityScheme(
         name = "Bearer Auth",
-        description = "JWT auth description",
+        description = "JWT Authentication",
         scheme = "bearer",
         type = SecuritySchemeType.HTTP,
         bearerFormat = "JWT",
@@ -36,46 +38,37 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 )
 public class SecurityConfig {
 
+    private final TokenService tokenService;
+    private final CustomUserDetailsService userDetailsService;
+
     private static final String[] DOCUMENTATION_OPENAPI = {
             "/docs/index.html", "/docs-park.html", "/docs-park/**",
             "/v3/api-docs/**", "/swagger-ui-custom.html", "/swagger-ui.html",
             "/swagger-ui/**", "/**.html", "/webjars/**",
-            "/configuration/**", "/swagger-resources/**","/h2-console/**"
-
+            "/configuration/**", "/swagger-resources/**", "/h2-console/**"
     };
-    private  TokenService tokenService;
-    private  CustomUserDetailsService userDetailsService;
-
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
-        http.csrf(csrf -> csrf.disable())//(CookieCsrfTokenRepository.withHttpOnlyFalse()))
-                .formLogin(form -> form.disable())  // Desabilita o formulário de login padrão do Spring Security
-                .httpBasic(basic -> basic.disable())  // Desabilita a autenticação básica HTTP
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.csrf(csrf -> csrf.disable())
+                .formLogin(form -> form.disable())
+                .httpBasic(basic -> basic.disable())
                 .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/index").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/usuario/register").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/usuario/login").permitAll()
-                        .requestMatchers("/docs/**").permitAll()
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
                         .requestMatchers(DOCUMENTATION_OPENAPI).permitAll()
                         .anyRequest().authenticated()
                 )
-                /*  .logout(logout -> logout
-                          .logoutUrl("/logout")
-                          .logoutSuccessUrl("/index")
-                          .invalidateHttpSession(true)
-                          .deleteCookies("JSESSIONID")*/
-
-                .addFilterAfter(authenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAfter(securityFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
-    private AuthenticationFilter authenticationFilter() {
-        return new AuthenticationFilter(userDetailsService, tokenService);
+    @Bean
+    public SecurityFilter securityFilter() {
+        return new SecurityFilter(tokenService, userDetailsService);
     }
 
     @Bean
@@ -83,15 +76,15 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean    // Define o gerenciador de autenticação, permitindo a integração com o processo de autenticação configurado
+    @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider(Cus) {
+    public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService());
+        authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }

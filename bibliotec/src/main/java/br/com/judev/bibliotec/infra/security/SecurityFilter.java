@@ -16,9 +16,7 @@ import java.io.IOException;
 
 @AllArgsConstructor
 
-public class AuthenticationFilter extends OncePerRequestFilter {
-
-    private static final Logger log = Logger.getLogger(AuthenticationFilter.class.getName());
+public class SecurityFilter extends OncePerRequestFilter {
 
     private TokenService tokenService;
     private UserDetailsService userDetailsService;
@@ -56,7 +54,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
-
 
     private String recoverToken(HttpServletRequest request) {
         var authHeader = request.getHeader("Authorization");

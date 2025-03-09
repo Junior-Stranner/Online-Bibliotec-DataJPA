@@ -15,7 +15,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public CreateUserResponseDTO createUser(CreateUserRequestDTO request) {
-    if(userRepository.findByEmail(request.getEmail()).isPresent()){
+    if(userRepository.findByEmail(request.getEmail())){
 
     }
         return null;

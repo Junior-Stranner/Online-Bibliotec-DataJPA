@@ -124,4 +124,5 @@ public class User implements UserDetails {
     public void setConfirmationCode(String confirmationCode) {
         this.confirmationCode = confirmationCode;
     }
+
 }

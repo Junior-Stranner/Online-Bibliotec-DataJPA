@@ -1,5 +1,6 @@
 package br.com.judev.bibliotec.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
@@ -97,9 +98,11 @@ public class User implements UserDetails {
         this.email = email;
     }
 
+    @JsonIgnore
     public Role getRole() {
-        return role;
+        return this.role;
     }
+
 
     public void setRole(Role role) {
         this.role = role;

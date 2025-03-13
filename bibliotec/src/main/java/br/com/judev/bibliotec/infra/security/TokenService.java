@@ -1,6 +1,5 @@
 package br.com.judev.bibliotec.infra.security;
 
-import br.com.judev.bibliotec.infra.exceptions.TokenCreationException;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
@@ -19,24 +18,20 @@ public class TokenService {
     @Value("${jwt.secret}")
     private String secret;
 
-    // Método para gerar um token JWT para o usuário.
-    public String generateToken(UserDetails userDetails) throws TokenCreationException {
+    public String generateToken(UserDetails userDetails) {
         try {
-            if (secret == null || secret.isEmpty()) {
-                throw new TokenCreationException("Secret key is not set. Check your application properties.");
-            }
-
-            var algorithm = Algorithm.HMAC256(secret);
-
-            return JWT.create()
-                    .withIssuer("login-auth-api")
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            String token = JWT.create()
+                    .withIssuer("auth-api")
                     .withSubject(userDetails.getUsername())
                     .withExpiresAt(generateExpirationDate())
                     .sign(algorithm);
-        } catch (JWTCreationException e) {
-            throw new TokenCreationException("Error while creating token" +e);
+            return token;
+        } catch (JWTCreationException exception) {
+            throw new RuntimeException("Error while generating token", exception);
         }
     }
+
 
 
     // Método para gerar a data de expiração do token.

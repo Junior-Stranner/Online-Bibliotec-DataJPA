@@ -29,9 +29,9 @@ public class CreateUserRequestDTO {
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$", message = "Passwort must be the same like your Password ahead")
     private String confirmPassword;
     @Enumerated(EnumType.STRING)
-    @NotBlank(message = "Role is required.")
+ /*   @NotBlank(message = "Role is required.")
     @JsonIgnore
-    private Role role;
+    private Role role = Role.Client;*/
     @JsonIgnore
     private boolean emailConfirmation;
     @JsonIgnore

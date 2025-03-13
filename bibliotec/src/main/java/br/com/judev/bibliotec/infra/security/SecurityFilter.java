@@ -22,43 +22,38 @@ public class SecurityFilter extends OncePerRequestFilter {
     private UserDetailsService userDetailsService;
 
 
-    // Método que realiza o filtro interno da requisição
     @Override
     public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         String path = request.getServletPath();
 
         // Permitir acesso sem autenticação para essas rotas
-        if (path.equals("/usuario/register") || path.equals("/usuario/login") ||
+        if (path.equals("/api/v1/auth/register") || path.equals("/api/v1/auth/login") ||
                 path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs") ||
                 path.startsWith("/swagger-resources") || path.equals("/favicon.ico")) {
-
             filterChain.doFilter(request, response);
             return;
         }
-
+        // A partir daqui, o código de verificação do token
         var token = this.recoverToken(request);
-
         if (token != null) {
-            System.out.println("Token encontrado: " + token);
-            var login = tokenService.validateToken(token);
+            String login = tokenService.validateToken(token);
             if (login != null) {
                 UserDetails user = userDetailsService.loadUserByUsername(login);
                 var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-                System.out.println("Usuário autenticado: " + login);
             }
-        } else {
-            System.out.println("Nenhum token encontrado.");
         }
-
         filterChain.doFilter(request, response);
     }
+
 
     private String recoverToken(HttpServletRequest request) {
         var authHeader = request.getHeader("Authorization");
         if(authHeader == null) return null;
         return authHeader.replace("Bearer ", "");
     }
+
+
 
 }

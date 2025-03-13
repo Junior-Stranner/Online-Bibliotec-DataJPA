@@ -4,7 +4,7 @@ import br.com.judev.bibliotec.dtos.requestDto.CreateUserRequestDTO;
 import br.com.judev.bibliotec.dtos.requestDto.LoginRequestDTO;
 import br.com.judev.bibliotec.dtos.responseDto.CreateUserResponseDTO;
 import br.com.judev.bibliotec.dtos.responseDto.LoginResponseDTO;
-import br.com.judev.bibliotec.infra.exceptions.TokenCreationException;
+import br.com.judev.bibliotec.infra.exceptions.EmailAlreadyExistsException;
 import br.com.judev.bibliotec.infra.security.TokenService;
 import br.com.judev.bibliotec.service.UserService;
 import jakarta.validation.Valid;
@@ -12,6 +12,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -31,19 +33,27 @@ public class AuthController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO request) throws TokenCreationException {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
-        final String jwt = tokenService.generateToken(userDetails);
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO request){
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+            );
+            final UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
+            final String jwt = tokenService.generateToken(userDetails);
+            System.out.println("Usuário autenticado: " + userDetails.getUsername() + ", Roles: " + userDetails.getAuthorities());
 
-        return ResponseEntity.ok(new LoginResponseDTO(jwt));
+            return ResponseEntity.ok(new LoginResponseDTO(jwt));
+
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("E-mail ou senha inválidos.");
+        } catch (DisabledException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Usuário desativado. Verifique seu e-mail.");
+        }
     }
 
 
     @PostMapping("/register")
-    public ResponseEntity<CreateUserResponseDTO> register(@Valid @RequestBody CreateUserRequestDTO dto){
+    public ResponseEntity<CreateUserResponseDTO> register(@Valid @RequestBody CreateUserRequestDTO dto) {
         CreateUserResponseDTO responseDTO = userService.createUser(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }

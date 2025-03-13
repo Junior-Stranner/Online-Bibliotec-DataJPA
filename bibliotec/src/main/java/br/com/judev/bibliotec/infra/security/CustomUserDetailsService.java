@@ -4,7 +4,6 @@ import br.com.judev.bibliotec.entity.User;
 import br.com.judev.bibliotec.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,20 +17,21 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
-        // Criação do GrantedAuthority baseado no role do usuário
-        GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().name());
+
+        // Garantir que a role tenha o prefixo 'ROLE_' no Spring Security
+        GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + user.getRole().name());
 
         return new org.springframework.security.core.userdetails.User(
-                user.getEmail(), // ou qualquer outro campo que você queira utilizar como identificador
+                user.getEmail(),
                 user.getPassword(),
-                List.of(authority) // Aqui as roles são corretamente atribuídas ao usuário
+                List.of(authority) // A role será atribuída corretamente
         );
     }
 }

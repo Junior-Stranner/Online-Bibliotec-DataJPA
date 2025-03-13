@@ -27,8 +27,6 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    private boolean enabled = false;
-
     private boolean emailConfirmation;
     private String confirmationCode;
 
@@ -42,7 +40,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if(this.role == Role.Admin){
+        if(this.role == Role.ADMIN){
             return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_CLIENTE"));
         }
         return List.of( new SimpleGrantedAuthority("ROLE_CLIENTE"));
@@ -75,7 +73,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 
     public String getCompleteName() {
@@ -108,9 +106,6 @@ public class User implements UserDetails {
         this.role = role;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
 
     public boolean isEmailConfirmation() {
         return emailConfirmation;

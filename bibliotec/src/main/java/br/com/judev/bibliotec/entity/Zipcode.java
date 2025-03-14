@@ -21,14 +21,13 @@ public class Zipcode extends RepresentationModel<Zipcode>{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
+    private String code;
     @OneToOne
     @JoinColumn(name = "city_id")
     private City city;
 
-    public Zipcode(String name, City city) {
-        this.name = name;
+    public Zipcode(String code, City city) {
+        this.code = code;
         this.city = city;
     }
-    
 }

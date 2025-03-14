@@ -24,12 +24,12 @@ public class CreateUserRequestDTO {
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$", message = "Password must have at least 6 characters, " +
             "one uppercase letter, one lowercase letter and one number. Ex: Password123")
     private String password;
-    @Size(min = 6, max = 50)
+/*    @Size(min = 6, max = 50)
     @NotBlank(message = "Password is not the same ")
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$", message = "Passwort must be the same like your Password ahead")
-    private String confirmPassword;
-    @Enumerated(EnumType.STRING)
- /*   @NotBlank(message = "Role is required.")
+    private String confirmPassword;*/
+  /*  @Enumerated(EnumType.STRING)
+    @NotBlank(message = "Role is required.")
     @JsonIgnore
     private Role role = Role.Client;*/
     @JsonIgnore

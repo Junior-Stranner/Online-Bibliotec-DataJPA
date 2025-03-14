@@ -28,7 +28,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 
 @RestController
-@RequestMapping("/v1/api/book")
+@RequestMapping("/api/v1/book")
 @AllArgsConstructor
 public class BookController {
     

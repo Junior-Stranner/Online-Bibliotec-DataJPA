@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.judev.bibliotec.dtos.requestDto.AuthorRequestDto;
 import br.com.judev.bibliotec.dtos.responseDto.AuthorResponseDto;
-import br.com.judev.bibliotec.dtos.responseDto.BookResponseDto;
 import br.com.judev.bibliotec.entity.Author;
 import br.com.judev.bibliotec.entity.Zipcode;
 import br.com.judev.bibliotec.service.AuthorService;
@@ -30,7 +29,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 
-@RequestMapping("/v1/api/author")
+@RequestMapping("/api/v1/author")
 @RestController
 @AllArgsConstructor
 public class AuthorController {
@@ -38,7 +37,6 @@ public class AuthorController {
       private final AuthorService authorService;
 
 
-      
      @Operation(summary = "Adds a new Author",
      description = "Adds a new Author by passing in a JSON, XML or YML representation of the Author!",
      tags = {"Author"},

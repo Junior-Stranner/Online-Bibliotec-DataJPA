@@ -30,12 +30,12 @@ public class ZipcodeServiceImpl implements ZipcodeService{
     @Transactional  
     public Zipcode addZipcode(ZipcodeRequestDto zipcodeRequestDto) {
         // Validação do nome do Zipcode
-        if (zipcodeRequestDto == null || zipcodeRequestDto.getName() == null || zipcodeRequestDto.getName().isBlank()) {
+        if (zipcodeRequestDto == null || zipcodeRequestDto.getCode() == null || zipcodeRequestDto.getCode().isBlank()) {
             throw new IllegalArgumentException("Zipcode name cannot be null or blank.");
         }
     
         // Verificação de duplicidade pelo nome do Zipcode
-        Optional<Zipcode> existingZipcode = zipcodeRepository.findByName(zipcodeRequestDto.getName());
+        Optional<Zipcode> existingZipcode = zipcodeRepository.findByName(zipcodeRequestDto.getCode());
         if (existingZipcode.isPresent()) {
             throw new DuplicateKeyException("Zipcode with this name already exists!");
         }
@@ -59,7 +59,7 @@ public class ZipcodeServiceImpl implements ZipcodeService{
     
         // Instanciar o Zipcode após validação
         Zipcode newZipcode = new Zipcode();
-        newZipcode.setName(zipcodeRequestDto.getName());
+        newZipcode.setCode(zipcodeRequestDto.getCode());
         newZipcode.setCity(city);
     
         // Salvar no repositório com tratamento de exceções
@@ -91,16 +91,16 @@ public class ZipcodeServiceImpl implements ZipcodeService{
         Zipcode zipToEdit = zipcodeRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("zipcode with ID: " + id + " could not be found"));
 
-        if (zipcodeRequestDto.getName() == null || zipcodeRequestDto.getName().isBlank()) {
+        if (zipcodeRequestDto.getCode() == null || zipcodeRequestDto.getCode().isBlank()) {
             throw new IllegalArgumentException("zipcode name cannot be null or blank!");
         }
 
-       Optional<Zipcode> existingZipcode = zipcodeRepository.findByName(zipcodeRequestDto.getName());
+       Optional<Zipcode> existingZipcode = zipcodeRepository.findByName(zipcodeRequestDto.getCode());
        if (existingZipcode.isPresent() && !existingZipcode.get().getId().equals(id)) {
          throw new DuplicateKeyException("Another Zipcode with the same zipcode already exists!");
       }
 
-        zipToEdit.setName(zipcodeRequestDto.getName());  
+        zipToEdit.setCode(zipcodeRequestDto.getCode());
         return zipcodeRepository.save(zipToEdit); 
     }
 

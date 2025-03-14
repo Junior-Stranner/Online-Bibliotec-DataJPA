@@ -29,7 +29,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 
 @RestController
-@RequestMapping("/v1/api/category")
+@RequestMapping("/api/v1/category")
 @AllArgsConstructor
 public class CategoryController {
     

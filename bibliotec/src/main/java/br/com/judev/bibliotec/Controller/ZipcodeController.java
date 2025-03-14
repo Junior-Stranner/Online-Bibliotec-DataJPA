@@ -30,7 +30,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.AllArgsConstructor;
 
 @RestController
-@RequestMapping("/v1/api/zipcode")
+@RequestMapping("/api/v1/zipcode")
 @AllArgsConstructor
 public class ZipcodeController {
     

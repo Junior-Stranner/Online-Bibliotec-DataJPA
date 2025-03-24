@@ -33,6 +33,11 @@ public class User implements UserDetails {
     private boolean emailConfirmation;
     private String confirmationCode;
 
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "endereco_id", referencedColumnName = "id")
+    private Address address;
+
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Loan> loans = new ArrayList<>();
 

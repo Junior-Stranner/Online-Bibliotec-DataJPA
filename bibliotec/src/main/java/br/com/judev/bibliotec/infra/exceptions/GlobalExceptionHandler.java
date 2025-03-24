@@ -31,6 +31,12 @@ public class GlobalExceptionHandler  {
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDetails);
     }
+
+    @ExceptionHandler(UserEmailNotFoundException.class)
+    public ResponseEntity<ErrorDetails> handleUserEmailNotFoundException(UserEmailNotFoundException ex, WebRequest request) {
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDetails);
+    }
 }
 
 /*

@@ -29,6 +29,7 @@ public class Book extends RepresentationModel<Book>{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private boolean available = true;
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
             name = "book_author",
@@ -41,10 +42,11 @@ public class Book extends RepresentationModel<Book>{
     @JoinColumn(name = "category_id")
     private Category category;
 
-    public Book(String name, List<Author> authors, Category category) {
+    public Book(String name, List<Author> authors, Category category, boolean available) {
         this.name = name;
         this.authors = authors;
         this.category = category;
+        this.available = available;
     }
 
     public void addAuthor(Author author) {

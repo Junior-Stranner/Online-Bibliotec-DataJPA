@@ -17,39 +17,37 @@ public class Loan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private LocalDate inicio;
-    private LocalDate fim;
-    private Double multa = 0.00;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private Double fine = 0.00;
     @ManyToOne
     @JoinColumn(name = "book_id")
     private Book book;
     @Enumerated(EnumType.STRING)
     private StatusLoan status;
     @ManyToOne
-    @JoinColumn(name = "usuario_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
-    public Loan(LocalDate inicio, LocalDate fim, Double multa, Book book, StatusLoan status, User user) {
-        this.inicio = inicio;
-        this.fim = LocalDate.now().plusWeeks(2);
-        this.multa = multa;
+    public Loan(LocalDate startDate, LocalDate endDate, Double fine, Book book, StatusLoan status, User user, boolean isAvailable) {
+        this.startDate = startDate;
+        this.endDate = LocalDate.now().plusWeeks(2);
+        this.fine = fine;
         this.book = book;
         this.status = status;
         this.user = user;
     }
 
-    public void multaPagar() {
-        LocalDate dataLimite = this.inicio.plusWeeks(2);
-        if (LocalDate.now().isAfter(dataLimite)) {
-            long diasDeAtraso = java.time.temporal.ChronoUnit.DAYS.between(dataLimite, LocalDate.now());
+    public void calculateFine() {
+        LocalDate dueDate = this.startDate.plusWeeks(2);
+        if (LocalDate.now().isAfter(dueDate)) {
+            long daysLate = java.time.temporal.ChronoUnit.DAYS.between(dueDate, LocalDate.now());
 
-            long semanasDeAtraso = diasDeAtraso / 7;
+            long weeksLate = daysLate / 7;
 
-            if (semanasDeAtraso > 0) {
-                this.multa += (this.multa * 0.02) * semanasDeAtraso;
+            if (weeksLate > 0) {
+                this.fine += (this.fine * 0.02) * weeksLate;
             }
         }
     }
-
-
 }

@@ -37,17 +37,6 @@ public class AuthorController {
       private final AuthorService authorService;
 
 
-     @Operation(summary = "Adds a new Author",
-     description = "Adds a new Author by passing in a JSON, XML or YML representation of the Author!",
-     tags = {"Author"},
-     responses = {
-         @ApiResponse(description = "Created", responseCode = "201",
-             content = @Content(schema = @Schema(implementation = Author.class))),
-         @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
-         @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
-         @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
-     }
- )
     @PostMapping("/addAuthor")
     public ResponseEntity<AuthorResponseDto> addAuthor(
             @RequestBody final AuthorRequestDto authorRequestDto) {
@@ -56,18 +45,7 @@ public class AuthorController {
     }
 
 
-    @Operation(summary = "Finds a Author", description = "Finds a Author",
-    tags = {"Author"},
-    responses = {
-          @ApiResponse(description = "Success", responseCode = "200",
-             content = @Content(schema = @Schema(implementation = Author.class))),
-          @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
-          @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
-          @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
-          @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-          @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
-      }
-  )
+
     @GetMapping("/get/{id}")
     public ResponseEntity<AuthorResponseDto> getAuthor(@PathVariable final Long id) {
         AuthorResponseDto authorResponseDto = authorService.getAuthorById(id);
@@ -76,18 +54,7 @@ public class AuthorController {
 
 
     
-     @Operation(summary = "Finds all Author", description = "Finds all Author",
-    tags = {"Author"},
-    responses = {
-        @ApiResponse(description = "Success", responseCode = "200",
-               content = { @Content(mediaType = "application/json", 
-               array = @ArraySchema(schema = @Schema(implementation = Author.class)))}),
-            @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
-            @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
-            @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-            @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
-         }
-)
+
  /*    @GetMapping("/getAll")
     public ResponseEntity<List<AuthorResponseDto>> getAuthors() {
         List<AuthorResponseDto> authorResponseDtos = authorService.getAuthors();
@@ -102,18 +69,7 @@ public class AuthorController {
     }
 
 
-    @Operation(summary = "delete a city",
-    description = "delete a Author by passing in a JSON, XML or YML representation of the Author!",
-    tags = {"Author"},
-    responses = { 
-        @ApiResponse(description = "delete", responseCode = "200",
-            content = @Content(schema = @Schema(implementation = Author.class))),
-        @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
-        @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
-        @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-        @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
-    }
-)
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<AuthorResponseDto> deleteAuthor(@PathVariable final Long id) {
         AuthorResponseDto authorResponseDto = authorService.deleteAuthor(id);
@@ -121,18 +77,7 @@ public class AuthorController {
     }
 
 
-    @Operation(summary = "Updates a Author",
-    description = "Updates a City by passing in a JSON, XML or YML representation of the Author!",
-    tags = {"Author"},
-    responses = { 
-        @ApiResponse(description = "Updated", responseCode = "200",
-            content = @Content(schema = @Schema(implementation = Author.class))),
-        @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
-        @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
-        @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-        @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
-    }
-)
+
     @PutMapping("/edit/{id}")
     private ResponseEntity<AuthorResponseDto> editAuthor(@PathVariable final Long id,
                                                          @RequestBody final AuthorRequestDto authorRequestDto) {
@@ -141,17 +86,7 @@ public class AuthorController {
     }
 
 
-  @Operation(summary = "Adds a new City on exists Author",
-    description = "Adds a new City by passing in a JSON, XML or YML representation of the Author!",
-    tags = {"Author"},
-    responses = {
-        @ApiResponse(description = "Created", responseCode = "201",
-            content = @Content(schema = @Schema(implementation = Author.class))),
-        @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
-        @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
-        @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
-    }
-)
+
     @PostMapping("/addZipcode/{zipcodeId}/to/Author/{authorId}")
     private ResponseEntity<AuthorResponseDto> addZipcode(@PathVariable final Long zipcodeId,
                                                          @PathVariable final Long authorId) {
@@ -159,18 +94,7 @@ public class AuthorController {
         return new ResponseEntity<>(authorResponseDto, HttpStatus.OK);
     }
 
-    @Operation(summary = "delete city from  Author",
-    description = "delete a city from Author by passing in a JSON, XML or YML representation of the Author!",
-    tags = {"Author"},
-    responses = { 
-        @ApiResponse(description = "delete", responseCode = "200",
-            content = @Content(schema = @Schema(implementation = Zipcode.class))),
-        @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
-        @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
-        @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
-        @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
-    }
-)
+
     @DeleteMapping("/removeZipcode/from/{authorId}")
     private ResponseEntity<AuthorResponseDto> removeZipcode(@PathVariable final Long authorId) {
         AuthorResponseDto authorResponseDto = authorService.deleteZipcodeFromAuthor(authorId);

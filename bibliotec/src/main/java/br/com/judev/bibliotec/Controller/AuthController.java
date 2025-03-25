@@ -17,6 +17,7 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,6 +32,7 @@ public class AuthController implements br.com.judev.bibliotec.controller.AuthCon
     private final TokenService tokenService;
 
 
+    @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO request) {
         try {
             authenticationManager.authenticate(
@@ -47,9 +49,15 @@ public class AuthController implements br.com.judev.bibliotec.controller.AuthCon
         }
     }
 
-
+    @PostMapping("/register/client")
     public ResponseEntity<CreateUserResponseDTO> register(@Valid @RequestBody CreateUserRequestDTO dto) {
         CreateUserResponseDTO responseDTO = userService.createUser(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
+    }
+
+    @PostMapping("/register/admin")
+    public ResponseEntity<CreateUserResponseDTO> registerAdmin(@Valid @RequestBody CreateUserRequestDTO dto) {
+        CreateUserResponseDTO responseDTO = userService.createUserAdmin(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 }

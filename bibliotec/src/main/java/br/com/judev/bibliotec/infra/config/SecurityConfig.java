@@ -54,9 +54,9 @@ public class SecurityConfig {
                 .httpBasic(basic -> basic.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/register").permitAll()  // Permitir acesso sem autenticação
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/register/client").hasRole("CLIENT")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/register/admin").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()      // Permitir acesso sem autenticação
-                        .requestMatchers(HttpMethod.POST, "/api/v1/city/add").authenticated()
                         .requestMatchers(DOCUMENTATION_OPENAPI).permitAll()  // Permitir acesso à documentação
                         .anyRequest().authenticated() // Exigir autenticação para as outras rotas
                 )

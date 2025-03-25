@@ -1,5 +1,6 @@
 package br.com.judev.bibliotec.dtos.responseDto;
 
+import br.com.judev.bibliotec.dtos.AddressDTO;
 import br.com.judev.bibliotec.entity.Role;
 
 import lombok.Data;
@@ -15,4 +16,5 @@ public class CreateUserResponseDTO {
     private boolean emailConfirmation;
     private String confirmationCode;
     private boolean activated;
+ //   private AddressDTO addressDTO;
 }

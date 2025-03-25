@@ -9,4 +9,7 @@ import org.springframework.stereotype.Service;
 public interface UserService {
 
  CreateUserResponseDTO createUser(CreateUserRequestDTO request) throws EmailAlreadyExistsException;
+
+ CreateUserResponseDTO createUserAdmin(CreateUserRequestDTO request) throws EmailAlreadyExistsException;
+
 }

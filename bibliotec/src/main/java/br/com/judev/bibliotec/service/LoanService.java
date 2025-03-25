@@ -6,13 +6,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public interface LoanService {
     // Criar um novo empréstimo
     LoanResponseDTO makeLoan(LoanRequestDTO loanRequestDTO);
 
     // Buscar todos os empréstimos
-    Page<LoanResponseDTO> findAllLoans(Pageable pageable);
+    List<LoanResponseDTO> findAllLoans(Pageable pageable);
 
     // Buscar empréstimos por ID
     LoanResponseDTO findLoanById(Long id);

@@ -1,16 +1,10 @@
-package br.com.judev.bibliotec.service.impl;
+package br.com.judev.bibliotec.service.serviceImpl;
 
-import br.com.judev.bibliotec.dtos.mapper.AddressMapper;
 import br.com.judev.bibliotec.dtos.mapper.LoanMapper;
-import br.com.judev.bibliotec.dtos.mapper.LoansMapper;
 import br.com.judev.bibliotec.dtos.requestDto.LoanRequestDTO;
 import br.com.judev.bibliotec.dtos.responseDto.LoanResponseDTO;
 import br.com.judev.bibliotec.entity.Loan;
-import br.com.judev.bibliotec.entity.Book;
-import br.com.judev.bibliotec.dto.LoanResponseDTO;
-import br.com.judev.bibliotec.dto.LoanRequestDTO;
 import br.com.judev.bibliotec.entity.StatusLoan;
-import br.com.judev.bibliotec.exception.LoanException;
 import br.com.judev.bibliotec.infra.exceptions.BookNotAvaliableForLoanException;
 import br.com.judev.bibliotec.infra.exceptions.LoanException;
 import br.com.judev.bibliotec.infra.exceptions.UserEmailNotFoundException;
@@ -19,7 +13,6 @@ import br.com.judev.bibliotec.repository.BookRepository;
 import br.com.judev.bibliotec.repository.UserRepository;
 import br.com.judev.bibliotec.service.LoanService;
 import jakarta.persistence.EntityNotFoundException;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -61,15 +53,18 @@ public class LoanServiceImpl implements LoanService {
         loan.setEndDate(loan.getStartDate().plusWeeks(2));
         loan.setBook(book);
         loan.setStatus(StatusLoan.ACTIVE);
+        loan.setUser(user);
 
         Loan saveLoan =  loanRepository.save(loan);
         book.setAvailable(false); // Marca livro como emprestado
+        bookRepository.save(book);
+
 
         return LoanMapper.toDto(saveLoan);
     }
 
     @Override
-    public Page<LoanResponseDTO> findAllLoans(Pageable pageable) {
+    public List<LoanResponseDTO> findAllLoans(Pageable pageable) {
         Page<Loan> loanPages = loanRepository.findAll(pageable);
         List<Loan> loans = loanPages.getContent();
         return LoanMapper.toListDto(loans);
@@ -84,8 +79,8 @@ public class LoanServiceImpl implements LoanService {
     @Transactional
     @Override
     public void returnLoan(Long id) {
-        var loan = loanRepository.findById(id).orElseThrow((
-        ) -> new LoanException("Empréstimo não encontrado"));
+        var loan = loanRepository.findById(id).orElseThrow(
+                () -> new LoanException("Empréstimo não encontrado"));
         var book = loan.getBook();
 
         loan.calculateFine();

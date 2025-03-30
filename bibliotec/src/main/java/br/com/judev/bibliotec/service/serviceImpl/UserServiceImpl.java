@@ -3,7 +3,7 @@ package br.com.judev.bibliotec.service.serviceImpl;
 import br.com.judev.bibliotec.dtos.mapper.UserMapper;
 import br.com.judev.bibliotec.dtos.requestDto.CreateUserRequestDTO;
 import br.com.judev.bibliotec.dtos.responseDto.CreateUserResponseDTO;
-import br.com.judev.bibliotec.entity.Role;
+import br.com.judev.bibliotec.entity.enums.Role;
 import br.com.judev.bibliotec.entity.User;
 import br.com.judev.bibliotec.infra.exceptions.EmailAlreadyExistsException;
 import br.com.judev.bibliotec.repository.UserRepository;

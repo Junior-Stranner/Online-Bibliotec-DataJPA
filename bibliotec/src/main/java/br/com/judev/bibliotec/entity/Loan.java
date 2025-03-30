@@ -1,5 +1,6 @@
 package br.com.judev.bibliotec.entity;
 
+import br.com.judev.bibliotec.entity.enums.StatusLoan;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,8 @@ public class Loan {
     private LocalDate startDate;
     private LocalDate endDate;
     private Double fine = 0.00;
+
+
     @ManyToOne
     @JoinColumn(name = "book_id")
     private Book book;
@@ -29,13 +32,22 @@ public class Loan {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Loan(LocalDate startDate, LocalDate endDate, Double fine, Book book, StatusLoan status, User user, boolean isAvailable) {
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    private Address address;
+
+    private boolean isAvailable;
+
+
+    public Loan(LocalDate startDate, Book book, StatusLoan status, User user, Address address, boolean isAvailable) {
         this.startDate = startDate;
-        this.endDate = LocalDate.now().plusWeeks(2);
-        this.fine = fine;
+        this.endDate = startDate.plusWeeks(2); // Calcula a data de devolução automaticamente
+        this.fine = 0.00; // Inicializa com multa 0
         this.book = book;
         this.status = status;
         this.user = user;
+        this.address = address;
+        this.isAvailable = status == StatusLoan.REQUESTED;
     }
 
     public void calculateFine() {
@@ -50,4 +62,8 @@ public class Loan {
             }
         }
     }
+    public void updateAvailability() {
+        this.isAvailable = this.status == StatusLoan.RETURNED;
+    }
+
 }

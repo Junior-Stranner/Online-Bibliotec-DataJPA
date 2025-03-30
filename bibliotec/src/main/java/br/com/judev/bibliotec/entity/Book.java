@@ -29,7 +29,7 @@ public class Book extends RepresentationModel<Book>{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private boolean available = true;
+    private boolean isAvailable = true;
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(
             name = "book_author",
@@ -42,11 +42,11 @@ public class Book extends RepresentationModel<Book>{
     @JoinColumn(name = "category_id")
     private Category category;
 
-    public Book(String name, List<Author> authors, Category category, boolean available) {
+    public Book(String name, List<Author> authors, Category category, boolean isAvailable) {
         this.name = name;
         this.authors = authors;
         this.category = category;
-        this.available = available;
+        this.isAvailable = isAvailable;
     }
 
     public void addAuthor(Author author) {
@@ -55,5 +55,13 @@ public class Book extends RepresentationModel<Book>{
 
     public void deleteAuthor(Author author) {
         authors.remove(author);
+    }
+
+    public void markAsUnavailable() {
+        this.isAvailable = false;
+    }
+
+    public void markAsAvailable() {
+        this.isAvailable = true;
     }
 }

@@ -2,6 +2,7 @@ package br.com.judev.bibliotec.dtos.requestDto;
 
 
 
+import br.com.judev.bibliotec.entity.Address;
 import br.com.judev.bibliotec.entity.Book;
 import br.com.judev.bibliotec.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -17,4 +18,6 @@ public class LoanRequestDTO {
     private Book book;
     @JsonIgnore
     private User user;
+    @JsonIgnore
+    private Address address;
 }

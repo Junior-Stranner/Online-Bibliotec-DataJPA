@@ -10,7 +10,7 @@ import br.com.judev.bibliotec.entity.Zipcode;
 
 public interface ZipcodeRepository extends JpaRepository<Zipcode,Long>{
 
-    Optional<Zipcode> findByName(String name);
+    Optional<Zipcode> findByCode(String code);
 
    @Query("SELECT z FROM Zipcode z WHERE z.city.id = :cityId")
   Optional<Zipcode> findByCityId(@Param("cityId") Long cityId);

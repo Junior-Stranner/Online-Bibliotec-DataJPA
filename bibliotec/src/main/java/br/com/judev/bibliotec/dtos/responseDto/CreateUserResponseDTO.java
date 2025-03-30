@@ -1,7 +1,6 @@
 package br.com.judev.bibliotec.dtos.responseDto;
 
-import br.com.judev.bibliotec.dtos.AddressDTO;
-import br.com.judev.bibliotec.entity.Role;
+import br.com.judev.bibliotec.entity.enums.Role;
 
 import lombok.Data;
 

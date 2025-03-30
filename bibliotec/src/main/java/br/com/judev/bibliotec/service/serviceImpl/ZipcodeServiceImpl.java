@@ -35,7 +35,7 @@ public class ZipcodeServiceImpl implements ZipcodeService{
         }
     
         // Verificação de duplicidade pelo nome do Zipcode
-        Optional<Zipcode> existingZipcode = zipcodeRepository.findByName(zipcodeRequestDto.getCode());
+        Optional<Zipcode> existingZipcode = zipcodeRepository.findByCode(zipcodeRequestDto.getCode());
         if (existingZipcode.isPresent()) {
             throw new DuplicateKeyException("Zipcode with this name already exists!");
         }
@@ -95,7 +95,7 @@ public class ZipcodeServiceImpl implements ZipcodeService{
             throw new IllegalArgumentException("zipcode name cannot be null or blank!");
         }
 
-       Optional<Zipcode> existingZipcode = zipcodeRepository.findByName(zipcodeRequestDto.getCode());
+       Optional<Zipcode> existingZipcode = zipcodeRepository.findByCode(zipcodeRequestDto.getCode());
        if (existingZipcode.isPresent() && !existingZipcode.get().getId().equals(id)) {
          throw new DuplicateKeyException("Another Zipcode with the same zipcode already exists!");
       }
